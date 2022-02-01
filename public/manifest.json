@@ -3,7 +3,7 @@
   "name": "DIM Plus",
   "description": "Some added features to DIM to make my life easier",
   "version": "0.1",
-  "homepage_url": "https://stylestash.dev",
+  "homepage_url": "https://github.com/leonardoneumann/DimPlus",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -17,7 +17,7 @@
     "scripts": ["background.js"]
   },
   "content_scripts": [{
-    "matches": ["https://app.destinyitemmanager.com/*"],
+    "matches": ["https://app.destinyitemmanager.com/*", "https://beta.destinyitemmanager.com/*"],
     "all_frames": true,
     "js": [
       
