@@ -5,7 +5,7 @@ Some quality of life additions to our beloved DIM , for now only including basic
 ![Alt text](./1_lightgg_integration.png?raw=true "My precious Messenger")
 
 ## Downloads
-[Build 0.1](https://github.com/leonardoneumann/DimPlus/blob/main/builds/DimPlus_build_0.1.zip)
+[Build 0.1](https://github.com/leonardoneumann/DimPlus/raw/main/builds/DimPlus_build_0.1.zip)
 
 
 ### Testing Inside Chrome
