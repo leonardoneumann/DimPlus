@@ -1,0 +1,30 @@
+.relative-percent-container {
+    position: absolute;
+    font-family: "Roboto Condensed", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+}
+
+.relative-percent-bar {
+    
+    color: #ffffffcf;
+
+    font-size: 10px;
+    text-align: center;
+    line-height: 12px;
+
+    position: absolute;
+    top: 21px;
+    left: -2px;
+    width: 30px;
+    height: 11px;
+}
+
+.relative-percent-place {
+    color: #ffffffcf;
+    font-size: 12px;
+
+    position: absolute;
+    top: -4px;
+    left: -3px;
+}

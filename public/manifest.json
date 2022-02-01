@@ -1,0 +1,44 @@
+{
+  "manifest_version": 2,
+  "name": "DIM Plus",
+  "description": "Some added features to DIM to make my life easier",
+  "version": "0.1",
+  "homepage_url": "https://stylestash.dev",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "favicon.png",
+    "default_title": "DIM Plus"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [{
+    "matches": ["https://app.destinyitemmanager.com/*"],
+    "all_frames": true,
+    "js": [
+      
+      "./jquery.js",
+      "./appmessages.js",
+      "./DIM/events.inventory.js",
+      "./DIM/communityrolls.js",
+
+      "./content.js"
+    ],
+    "css": [
+      "./DIM/main.css"
+    ]
+  }],
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "https://www.light.gg/*"
+  ],
+  "web_accessible_resources": [
+    "index.html",
+    "/static/*"
+  ]
+}
