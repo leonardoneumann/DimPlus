@@ -4,11 +4,13 @@ Some quality of life additions to our beloved DIM , for now only including basic
 
 ![Alt text](./1_lightgg_integration.png?raw=true "My precious Messenger")
 
+[How to install it](https://www.youtube.com/watch?v=em6Nu4GzXnA&ab_channel=LeoN)
+
 ## Downloads
 [Build 0.1](https://github.com/leonardoneumann/DimPlus/raw/main/builds/DimPlus_build_0.1.zip)
 
 
-### Testing Inside Chrome
+### Building and Testing the source code
 
 This project needs to be built in order to take advantage of the Chrome Extension API, such as using the Content script to get the extension's ID, or using the Chrome Storage API. These features cannot be used when running this project locally.
 
