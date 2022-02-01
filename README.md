@@ -1,18 +1,12 @@
-## react-chrome-extension
-![Alt text](./react-chrome-extension.png?raw=true "Optional Title")
+## DIM Plus Extension for Chrome
 
-This is the first in a series of React boilerplate projects to help web developers learn and understand React. This project actually came about as I was creating my latest project, [StyleStash - Save Your favorite CSS Styles](https://stylestash.dev).
+Some quality of life additions to our beloved DIM , for now only including basic light.gg community usage information.
 
-## Video Code Walkthrough
+![Alt text](./1_lightgg_integration.png?raw=true "My precious Messenger")
 
-If you're more of a visual learner, I've recorded a [20 minute video walkthrough of this project](https://www.youtube.com/watch?v=4x0lQu1TOCQ).
+## Downloads
+[Build 0.1](https://github.com/leonardoneumann/DimPlus/blob/main/builds/DimPlus_build_0.1.zip)
 
-### Local Testing
-
-`npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### Testing Inside Chrome
 
