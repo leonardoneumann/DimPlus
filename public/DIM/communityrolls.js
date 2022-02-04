@@ -91,11 +91,17 @@ function get_community_rolls(itemId) {
                                 if(childs && childs.length > 1) {
                                     let curPerkName = childs[1].innerText
                                     roll = rollData.find(r => r.imgUrl === imgElem.src && r.name === curPerkName)
-                                } else {
-                                    //we'll just guess here
+                                }
+
+                                //we'll just guess here, where we dont have the perkname on the item-popup
+                                // or if the language differs from light.gg and DIM
+                                if(!roll) {
+                                    
                                     let rolls = rollData.filter(r => r.imgUrl === imgElem.src)
+
                                     if (rolls.length > 1) {
                                         //this case needs a fix , same icon for different perks is a problem without having the exact item uid
+                                        //or the perk name
                                         roll = rolls[0]
                                         guessed = true
                                     } else if (rolls.length === 1) {
