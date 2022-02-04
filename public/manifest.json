@@ -35,6 +35,7 @@
   "permissions": [
     "activeTab",
     "tabs",
+    "storage",
     "https://www.light.gg/*"
   ],
   "web_accessible_resources": [

@@ -45,7 +45,7 @@ chrome.runtime.onMessage.addListener(
                         if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
                         createPopup(request.open_window)
                     } else {
-                        if(lastUrl && lastUrl == request.open_window.url) {
+                        if(lastUrl && lastUrl === request.open_window.url) {
                             sendResponse({ tabId: lastTabId })
                         } else {
                             chrome.tabs.update(lastTabId, { url: request.open_window.url }, 

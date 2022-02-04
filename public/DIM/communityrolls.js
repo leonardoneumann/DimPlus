@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 function get_community_rolls(itemId) {
 
     if(!itemId) return
@@ -5,6 +6,7 @@ function get_community_rolls(itemId) {
     let link = 'https://www.light.gg/db/items/' + itemId + '#community-average'
     console.log('Item popup pressed , light.gg link : ' + link)
     
+    // eslint-disable-next-line no-restricted-globals
     let w = 350, h = 570, left = (screen.width/2)-(w/2), top = (screen.height/2)-(h/2)
     //let windowData = {url: link, type: 'popup', width: w, height: h, left: left, top: top, state: 'minimized'}s
     let windowData = {url: link, type: 'popup', state: 'minimized'}
@@ -46,12 +48,13 @@ function get_community_rolls(itemId) {
 
                             $(liElem).children().each((i, perkDetails) => {
                             
+                                // eslint-disable-next-line default-case
                                 switch(perkDetails.className) {
                                     case 'percent':
                                         rollData[rollIndex] = {...{
                                             percent: perkDetails.innerText,
                                             column: column,
-                                            place : rowIndex + 1
+                                            place: rowIndex + 1
                                         }}
                                         break;
 
@@ -61,8 +64,10 @@ function get_community_rolls(itemId) {
 
                                     case 'item show-hover':
                                         rollData[rollIndex].perkId = perkDetails.getAttribute('data-id')
-                                        rollData[rollIndex].perkImgUrl = $(perkDetails).find('img')[0].src
-                                        break;
+                                        let imgEl = $(perkDetails).find('img')[0]
+
+                                        rollData[rollIndex].imgUrl = imgEl.src
+                                        rollData[rollIndex].name = imgEl.alt
                                 }
 
                             })
@@ -76,25 +81,53 @@ function get_community_rolls(itemId) {
                     if(perkGrid) {
                         $(perkGrid).find("img[src^='https://www.bungie.net/']").each((index, imgElem) => {
 
-                            let roll = rollData.find(roll => roll.perkImgUrl == imgElem.src)
-                            if(roll){
-                                let parentDiv = $(imgElem).parent().parent().parent()
+                            let parentDiv = $(imgElem).parent().parent().parent()
+                            let roll
+                            let guessed = false
 
-                                $(parentDiv).append(`
+                            if(parentDiv)
+                            {
+                                let childs = $(parentDiv).children()
+                                if(childs && childs.length > 1) {
+                                    let curPerkName = childs[1].innerText
+                                    roll = rollData.find(r => r.imgUrl === imgElem.src && r.name === curPerkName)
+                                } else {
+                                    //we'll just guess here
+                                    let rolls = rollData.filter(r => r.imgUrl === imgElem.src)
+                                    if (rolls.length > 1) {
+                                        //this case needs a fix , same icon for different perks is a problem without having the exact item uid
+                                        roll = rolls[0]
+                                        guessed = true
+                                    } else if (rolls.length === 1) {
+                                        roll = rolls[0]
+                                    }
+                                }
+                                    
+                            }
+
+                            if(roll){
+                                if (!guessed) {
+                                    $(parentDiv).append(`
                                     <div class="relative-percent-container">
-                                        <div class="relative-percent-place">#${roll.place}</div>
+                                        <div class="relative-percent-place">#${roll.place}${guessed ? '??' : ''}</div>
                                         <div class="relative-percent-bar"
                                              style="background-color: ${roll.color.replace('rgb','rgba').replace(')',', 0.80)')}; border: 1px solid ${roll.color};" >
                                             ${roll.percent}
                                         </div>
                                     </div>
-                                `)
-
-                                //parentDiv[0].style.borderColor = roll.color
-                                //parentDiv[0].style.borderWidth = 'medium'
-                                //$(parentDiv).siblings()[0].innerText += ` [ #${roll.place} - ${roll.percent} ]`
+                                    `)
+                                } else {
+                                    $(parentDiv).append(`
+                                    <div class="relative-percent-container">
+                                        <div class="relative-percent-place">#??</div>
+                                        <div class="relative-percent-bar"
+                                             style="background-color: rgba(211, 211, 211, 0.80); border: 1px solid rgb(211, 211, 211);" >
+                                            ???
+                                        </div>
+                                    </div>
+                                    `)
+                                }
                             }
-
                         })
                     }
                 }
