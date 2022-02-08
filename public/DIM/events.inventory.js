@@ -1,3 +1,4 @@
+
 function setDIMObservers() {
   let inventory_observer = new MutationObserver((_, quit) => {
       if (document.getElementsByClassName('item')[0]) {
@@ -15,8 +16,7 @@ function setDIMObservers() {
 window.addEventListener('inventory_ready', () => {
     var link;
   
-    document.getElementById('app').addEventListener('click', event => {
-
+    document.getElementById('app').addEventListener('click', async (event) => {
         //let isOrganizer = document.location.href.indexOf('organizer') > 0
 
         let isOpeningSheet = $(event.target).parents(".item-popup").length;
@@ -24,15 +24,28 @@ window.addEventListener('inventory_ready', () => {
         if(!isOpeningSheet) {
             let itemPopup = $(document.body).find('.item-popup').get(0)
 
-            if(itemPopup && $(itemPopup).children().find(event.target).length) {
+            if(itemPopup && $(itemPopup).children().find(event.target).length > 0) {
                 //avoiding clicks from inside the popup
                 return
             } else {
-                let openSheetLink = $(itemPopup).find('a')[0]
-                //try to get data opening the sheet page
-                if(openSheetLink) {
-                    openSheetLink.click()
-                    return
+                if (itemPopup) {
+                    let openSheetLink = $(itemPopup).find('a')[0]
+                    //try to get data opening the sheet page with a fake click
+                    if(openSheetLink) {
+                        openSheetLink.click()
+                        return
+                    }
+
+                    //Compare button click
+                    if($(itemPopup).children('.fa-balance-scale-left').length > 0) {
+
+                        let items = $(".sheet-container .item")
+                        if (items.length > 0) {
+
+                        }
+                    }
+
+                    
                 }
             }              
         } 
@@ -44,12 +57,17 @@ window.addEventListener('inventory_ready', () => {
                 if(closeSheet)
                     closeSheet.click()
 
-                if(itemId)
-                    get_community_rolls(itemId)
+                if(itemId) {
+                    CommunityRolls.GetAvgUsageData(itemId).then(rollsData => {
+                        CommunityRolls.AppendToItemPopup(rollsData)
+                    })
+                }
+                    
 
             } catch (error) {
                 console.log('Error getting itemId ' + error)
             }
         }
+
     })
 }, {once: true})

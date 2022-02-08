@@ -14,7 +14,9 @@
     "default_title": "DIM Plus"
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "./Background/background.js"
+    ]
   },
   "content_scripts": [{
     "matches": ["https://app.destinyitemmanager.com/*", "https://beta.destinyitemmanager.com/*"],
@@ -23,6 +25,9 @@
       
       "./jquery.js",
       "./appmessages.js",
+
+      "./Background/service.js",
+
       "./DIM/events.inventory.js",
       "./DIM/communityrolls.js",
 

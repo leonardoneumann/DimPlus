@@ -8,10 +8,6 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 var lastTabId;
 var lastUrl;
 
-var MyPopupWindow = () => {
-    //TODO: move all popup logic here
-}
-
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
