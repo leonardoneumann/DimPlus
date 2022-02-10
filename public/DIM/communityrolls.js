@@ -2,75 +2,20 @@
 
 
 class CommunityRolls {
-    
+
     /**
-     * Opens a window to light.gg and gets Community average data for a certain ItemId
-     * @param {int} itemId 
-     * @returns 
+     * Retrieves community average usage data for a certain item on Light.gg
+     * @param {any} itemId 
+     * @returns {Array} Community roll data objects array
      */
-    static async GetAvgUsageData(itemId) {
-        if(!itemId) return
-
-        let link = 'https://www.light.gg/db/items/' + itemId + '#community-average'
+    static async GetItemAvgRollsFromLightGg(itemId) {
+        const elementId = 'community-average'
         
-        let getHtmlFunction = () => {
-            let elem = document.getElementById('community-average')
-            return (elem && elem.innerHTML) ? elem.innerHTML : null
-        }
+        let ItemDbHtml = await LightGgData.GetHtmlItemDbData({itemId, elementId, anchorId: elementId})
 
-        let communityRollsResponse = await BackgroundService.OpenWindowAndExecute({url: link, executeFunction: getHtmlFunction})
-
-        if (communityRollsResponse != null && communityRollsResponse.length) {
-            let rollsHtml = $.parseHTML(communityRollsResponse)
-
-            let rollData = []
-            let rollIndex = 0
-            let column = 0
-            $(rollsHtml).each((colIndex, elem) => {
-
-                if(elem instanceof HTMLUListElement){
-                    column++;
-                } else {
-                    return
-                }
-
-                $(elem).children('li').each((rowIndex, liElem) => {
-
-                    rollData[rollIndex] = {}
-
-                    $(liElem).children().each((i, perkDetails) => {
-                    
-                        // eslint-disable-next-line default-case
-                        switch(perkDetails.className) {
-                            case 'percent':
-                                rollData[rollIndex] = {...{
-                                    percent: perkDetails.innerText,
-                                    column: column,
-                                    place: rowIndex + 1
-                                }}
-                                break;
-
-                            case 'relative-percent-container':
-                                rollData[rollIndex].color = perkDetails.children[0].style.backgroundColor
-                                break;
-
-                            case 'item show-hover':
-                                rollData[rollIndex].perkId = perkDetails.getAttribute('data-id')
-                                let imgEl = $(perkDetails).find('img')[0]
-
-                                rollData[rollIndex].imgUrl = imgEl.src
-                                rollData[rollIndex].name = imgEl.alt
-                        }
-
-                    })
-
-                    rollIndex++
-                })
-            })
-
+        if(ItemDbHtml) {
+            let rollData = await LightGgData.ProcessCommunityAvgRollsItemDbHtml(ItemDbHtml)
             return rollData
-        } else {
-            console.log("Error getting Community Avg Data")
         }
     }
 
@@ -117,31 +62,36 @@ class CommunityRolls {
                         
                 }
     
-                if(roll){
-                    if (!guessed) {
-                        $(parentDiv).append(`
-                        <div class="relative-percent-container">
-                            <div class="relative-percent-place">#${roll.place}${guessed ? '??' : ''}</div>
-                            <div class="relative-percent-bar"
-                                 style="background-color: ${roll.color.replace('rgb','rgba').replace(')',', 0.80)')}; border: 1px solid ${roll.color};" >
-                                ${roll.percent}
-                            </div>
-                        </div>
-                        `)
-                    } else {
-                        $(parentDiv).append(`
-                        <div class="relative-percent-container">
-                            <div class="relative-percent-place">#??</div>
-                            <div class="relative-percent-bar"
-                                 style="background-color: rgba(211, 211, 211, 0.80); border: 1px solid rgb(211, 211, 211);" >
-                                ???
-                            </div>
-                        </div>
-                        `)
-                    }
-                }
+                $(parentDiv).append(guessed ? this.#createRollPercentPlaceElement({guessed: guessed}) 
+                                            : this.#createRollPercentPlaceElement(roll))
             })
         }
+    }
+
+    /**
+     * Creates the div element to append to DIM
+     * @param {string} place
+     * @param {string} color
+     * @param {string} percent
+     * @param {string} guessed if the roll information is not exact
+     * @returns {string} div element html
+     */
+    static #createRollPercentPlaceElement({place, color, percent, guessed}) {
+        
+        let elem = `
+            <div class="relative-percent-container">
+                <div class="relative-percent-place">
+                    #${place ?? '??'}${guessed && place ? '?' : ''}
+                </div>
+                <div class="relative-percent-bar"
+                    style="${ color ? 'background-color:' + color.replace('rgb','rgba').replace(')',', 0.80)') + ';border: 1px solid ' + color
+                                    : 'background-color: rgba(211, 211, 211, 0.80); border: 1px solid rgb(211, 211, 211)' };">
+                    ${percent ?? '???'}
+                </div>
+            </div>
+        `
+
+        return elem
     }
 
 }

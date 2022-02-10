@@ -14,8 +14,7 @@ function setDIMObservers() {
 
 
 window.addEventListener('inventory_ready', () => {
-    var link;
-  
+
     document.getElementById('app').addEventListener('click', async (event) => {
         //let isOrganizer = document.location.href.indexOf('organizer') > 0
 
@@ -25,6 +24,16 @@ window.addEventListener('inventory_ready', () => {
             let itemPopup = $(document.body).find('.item-popup').get(0)
 
             if(itemPopup && $(itemPopup).children().find(event.target).length > 0) {
+                
+                //Compare button click
+                if($(itemPopup).children('.fa-balance-scale-left').length > 0) {
+
+                    let items = $(".sheet-container .item")
+                    if (items.length > 0) {
+                        console.log('Compare button clicked !')
+                    }
+                }
+                
                 //avoiding clicks from inside the popup
                 return
             } else {
@@ -35,17 +44,6 @@ window.addEventListener('inventory_ready', () => {
                         openSheetLink.click()
                         return
                     }
-
-                    //Compare button click
-                    if($(itemPopup).children('.fa-balance-scale-left').length > 0) {
-
-                        let items = $(".sheet-container .item")
-                        if (items.length > 0) {
-
-                        }
-                    }
-
-                    
                 }
             }              
         } 
@@ -54,16 +52,16 @@ window.addEventListener('inventory_ready', () => {
                 let itemId = $(document.body).find(".sheet-contents a[href^='https://www.light.gg/']")[0].href.split('/')[6]
 
                 let closeSheet = $(document.body).find('.sheet-close')[0]
+
                 if(closeSheet)
                     closeSheet.click()
 
                 if(itemId) {
-                    CommunityRolls.GetAvgUsageData(itemId).then(rollsData => {
+                    CommunityRolls.GetItemAvgRollsFromLightGg(itemId).then(rollsData => {
                         CommunityRolls.AppendToItemPopup(rollsData)
                     })
                 }
-                    
-
+            
             } catch (error) {
                 console.log('Error getting itemId ' + error)
             }

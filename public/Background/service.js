@@ -22,9 +22,10 @@ class BackgroundService {
      * @param {string} url target url to load into the popup
      * @param {string} [params] Window creation params , if not defined it will create a minimized popup. see https://developer.chrome.com/docs/extensions/reference/windows/
      * @param {string} [executeFunction] element selector function, if empty will default to return body InnerHTML. Can oly contain standard javascript
+     * @param {string} [executeFunctionString] element selector function already converted to string.
      * @returns {string} the result of the function executed in the popup
      */
-    static async OpenWindowAndExecute({url, params, executeFunction}) {
+    static async OpenWindowAndExecute({url, params, executeFunction, executeFunctionString}) {
         let windowParams;
         if (params) {
             windowParams = {...params, url: url}
@@ -36,7 +37,7 @@ class BackgroundService {
 
         if (openPopUpResponse) {
 
-            executeFunction = executeFunction || function() {
+            executeFunction = executeFunctionString || executeFunction || function() {
                 let elem = document.body
                 return  (elem && elem.innerHTML) ? document.body.innerHTML : null
             }

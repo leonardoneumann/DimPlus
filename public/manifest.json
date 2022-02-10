@@ -28,6 +28,7 @@
 
       "./Background/service.js",
 
+      "./LightGG/data.js",
       "./DIM/events.inventory.js",
       "./DIM/communityrolls.js",
 
