@@ -36,13 +36,13 @@ class LightGgData {
 
     /**
      * Parses the html data for community average rolls
-     * @param {string} htmlItemData Html string for the 'community-rolls' div element
+     * @param {string} html Html string for the 'community-rolls' div element
      * @returns {Array} Object array with roll data, including relative usage percentage and color, column position, img url, name
      */
-    static async ProcessCommunityAvgRollsItemDbHtml(htmlItemData) {
+    static ProcessCommunityAvgRollsItemDbHtml(html) {
 
-        if (htmlItemData != null && htmlItemData.length) {
-            let rollsHtml = $.parseHTML(htmlItemData)
+        if (html != null && html.length) {
+            let rollsHtml = $.parseHTML(html)
 
             let rollData = []
             let rollIndex = 0
@@ -92,6 +92,52 @@ class LightGgData {
             return rollData
         } else {
             console.log("Error getting Community Avg Data from LightGG")
+        }
+    }
+
+
+    /**
+     * Parses the html data for the current logged users items
+     * @param {string} html Html string for the 'community-rolls' div element
+     * @returns {Array} Object array with items and roll data
+     */
+    static ProcessMyRollsItemDbHtml(html) {
+
+        if (html != null && html.length) {
+            let rollsHtml = $.parseHTML(html)
+
+            let rollData = []
+
+            $(rollsHtml).filter('.clearfix').each((rowIndex, rowElem) => {
+                //let itemUUID = $(rowElem).find(".roll-header > .sharer > a[href^='/god-roll/roll-appraiser/#']")[0].href.split('#')[1]
+                let itemUUID = $(rowElem).attr('id').split('-')[1]
+
+                if(itemUUID) {
+                    rollData.length++
+                    rollData[itemUUID] = { uuid: itemUUID, rolls: [] }
+
+                    //let rolls = $(rowElem).find(".pref a[href^='/db/items/']")
+
+                    $(rowElem).find('.sockets > ul').each((colIndex, colElem) => {
+                        //perks
+                        if (colIndex < 4) {
+                            $(colElem).children('li').each((perkColIndex, perkElem) => {
+                                
+                                let pref = $(perkElem).attr("class")
+                                let perkId = $($(perkElem).children("a")[0]).attr("data-id")
+
+                                rollData[itemUUID].rolls.push({id: perkId, pref: pref, column: colIndex+1})
+                            })
+                        } else {
+                            //mod and masterwork
+                        }
+                    })
+                }
+            })
+
+            return rollData
+        } else {
+            console.log("Error getting All items and Rolls from LightGG")
         }
     }
 

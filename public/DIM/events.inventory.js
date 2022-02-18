@@ -15,24 +15,17 @@ function setDIMObservers() {
 
 window.addEventListener('inventory_ready', () => {
 
+    var lastItemId;
+
     document.getElementById('app').addEventListener('click', async (event) => {
         //let isOrganizer = document.location.href.indexOf('organizer') > 0
 
-        let isOpeningSheet = $(event.target).parents(".item-popup").length;
+        let isItempopupClick = $(event.target).parents(".item-popup").length;
 
-        if(!isOpeningSheet) {
+        if(!isItempopupClick) {
             let itemPopup = $(document.body).find('.item-popup').get(0)
 
             if(itemPopup && $(itemPopup).children().find(event.target).length > 0) {
-                
-                //Compare button click
-                if($(itemPopup).children('.fa-balance-scale-left').length > 0) {
-
-                    let items = $(".sheet-container .item")
-                    if (items.length > 0) {
-                        console.log('Compare button clicked !')
-                    }
-                }
                 
                 //avoiding clicks from inside the popup
                 return
@@ -41,13 +34,13 @@ window.addEventListener('inventory_ready', () => {
                     let openSheetLink = $(itemPopup).find('a')[0]
                     //try to get data opening the sheet page with a fake click
                     if(openSheetLink) {
+                        lastItemId = null
                         openSheetLink.click()
                         return
                     }
                 }
             }              
-        } 
-        else if (isOpeningSheet && !event.isTrusted) { //if its our simulated click
+        } else if (isItempopupClick && !event.isTrusted) { //if its our simulated click
             try {
                 let itemId = $(document.body).find(".sheet-contents a[href^='https://www.light.gg/']")[0].href.split('/')[6]
 
@@ -57,13 +50,37 @@ window.addEventListener('inventory_ready', () => {
                     closeSheet.click()
 
                 if(itemId) {
+                    lastItemId = itemId
                     CommunityRolls.GetItemAvgRollsFromLightGg(itemId).then(rollsData => {
                         CommunityRolls.AppendToItemPopup(rollsData)
                     })
+                } else {
+                    lastItemId = null
                 }
             
             } catch (error) {
                 console.log('Error getting itemId ' + error)
+            }
+        }  else if (isItempopupClick && event.isTrusted) {
+            
+            //Compare button click
+            let isCompareButton;
+            const scaleClassName = '.fa-balance-scale-left'
+            if(event.target instanceof HTMLDivElement) {
+                isCompareButton = $(event.target).children(scaleClassName).length > 0
+            } else {
+                isCompareButton = $(event.target).parent().children(scaleClassName).length > 0
+            }
+            
+            if(isCompareButton && lastItemId) {
+                let myItemRolls = await CommunityRolls.GetAllMyRollsFromLightGg(lastItemId)
+                let avgData = await CommunityRolls.GetItemAvgRollsFromLightGg(lastItemId)
+
+                if(myItemRolls.length > 0 && avgData.length > 0) {
+
+                    CommunityRolls.AppendToCompare(myItemRolls, avgData)
+
+                }
             }
         }
 
