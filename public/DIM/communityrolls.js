@@ -1,4 +1,4 @@
-/** @module CommunityRolls */
+/** @module DIM */
 
 
 class CommunityRolls {
@@ -9,12 +9,10 @@ class CommunityRolls {
      * @returns {Array} Community roll data objects array
      */
     static async GetItemAvgRollsFromLightGg(itemId) {
-        const elementId = 'community-average'
-        
-        let ItemDbHtml = await LightGgData.GetHtmlItemDbData({itemId, elementId, anchorId: elementId})
+        let ItemDbHtml = await LightGgDataScraper.GetHtmlItemDbData({itemId, elementId: LIGHTGG_COMMUNITY_AVG_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
 
         if(ItemDbHtml) {
-            let rollData = LightGgData.ProcessCommunityAvgRollsItemDbHtml(ItemDbHtml)
+            let rollData = LightGgDataScraper.ProcessCommunityAvgRollsItemDbHtml(ItemDbHtml)
             return rollData
         }
     }
@@ -25,12 +23,10 @@ class CommunityRolls {
      * @returns {Array} Community roll data objects array
      */
     static async GetAllMyRollsFromLightGg(itemId) {
-        const elementId = 'my-rolls'
-        
-        let ItemDbHtml = await LightGgData.GetHtmlItemDbData({itemId, elementId})
+        let ItemDbHtml = await LightGgDataScraper.GetHtmlItemDbData({itemId, elementId: LIGHTGG_MYROLLS_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
 
         if(ItemDbHtml) {
-            let rollData = LightGgData.ProcessMyRollsItemDbHtml(ItemDbHtml)
+            let rollData = LightGgDataScraper.ProcessMyRollsItemDbHtml(ItemDbHtml)
             return rollData
         }
     }
@@ -77,9 +73,10 @@ class CommunityRolls {
                     }
                         
                 }
-    
-                $(parentDiv).append(guessed ? this.#createRollPercentPlaceElement({guessed: guessed}) 
-                                            : this.#createRollPercentPlaceElement(roll))
+
+                if(roll || guessed)
+                    $(parentDiv).append(guessed ? this.#createRollPercentPlaceElement({guessed: guessed}) 
+                                                : this.#createRollPercentPlaceElement(roll))
             })
         }
     }
@@ -87,31 +84,41 @@ class CommunityRolls {
 
     /**
      * Processes roll data and appends it to the DIM popup window
-     * @param {ObjectArray} rollsData 
+     * @param {ObjectArray} myItemRolls
+     * @param {ObjectArray} avgRolls
      */
     static AppendToCompare(myItemRolls, avgRolls) {
         
         if(!avgRolls) return
-
         
         const compareGridItems = $(document.body).find(".sheet-container .item")
     
         if(compareGridItems) {
             $(compareGridItems).each((itemIndex, itemElem) => {
 
-                let curItemUUID = $(itemElem).attr('class')
+                let curItemUUID = $(itemElem).attr('id')
 
-                let itemStatsElem = $(itemElem).parentsUntil('.compare-item')[0]
+                //thankful for light.gg descriptive html 
+                let columns = $(itemElem).parentsUntil('.compare-item').parent().find('div.item-socket:not(.hasMenu)')
 
-                if(itemStatsElem) {
-                    $(itemElem).find("img[src^='https://www.bungie.net/']").each((imgIndex, imgElem) => {
-                        let rollColDiv = $(imgElem).parentsUntil('.item-sockets')[0]
+                if(columns.length > 0) {
 
-                        if (rollColDiv) {
-                            
-                            let curItemRolls = myItemRolls.find(r => r.uuid === curItemUUID)
-                            console.log(curItemRolls)
-                        }
+                    $(columns).each((colIndex, colElem) => {
+                        
+                        if(colIndex === 0) return //Frame Type
+                        
+                        $(colElem).find('.socket-container.notIntrinsic').each((rowIndex, rollElem) => {
+                            console.log(`curItemUUID : ${curItemUUID} colIndex : ${colIndex} rowIndex : ${rowIndex}`)
+                            let curRoll = myItemRolls[curItemUUID].rolls.find(r => r.column === colIndex - 1 && r.row === rowIndex)
+
+                            if(curRoll){
+                                let curRollStats = avgRolls.find(p => p.perkId === curRoll.id)
+
+                                if(curRollStats) {
+                                    $(rollElem).append(this.#createRollPercentPlaceElement(curRollStats))
+                                }
+                            }
+                        })
                     })
                 }
             })

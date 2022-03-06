@@ -4,14 +4,18 @@ Some quality of life additions to our beloved DIM , for now only including basic
 
 ![Alt text](./1_lightgg_integration.png?raw=true "My precious Messenger")
 
+![Alt text](./2_lightgg_integration_compare.png?raw=true "Compare")
+
+(you need to be logged into light.gg to get stats on compare)
+
 ### Guide
 [How to install it](https://www.youtube.com/watch?v=em6Nu4GzXnA&ab_channel=LeoN)
 
 ## Downloads
-[Build 0.3](https://github.com/leonardoneumann/DimPlus/releases/download/public_release_0.3/DimPlus_build_0.3.zip)
+[GET IT HERE](https://github.com/leonardoneumann/DimPlus/releases/)
 
 
-### Building and Testing the source code
+## Building and Testing the source code
 
 This project needs to be built in order to take advantage of the Chrome Extension API, such as using the Content script to get the extension's ID, or using the Chrome Storage API. These features cannot be used when running this project locally.
 

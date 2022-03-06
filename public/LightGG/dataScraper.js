@@ -1,8 +1,10 @@
 /** @module LightGg */
 
 const LIGHTGG_ITEMDB_URL = 'https://www.light.gg/db/items/'
+const LIGHTGG_COMMUNITY_AVG_ELEMID = 'community-average'
+const LIGHTGG_MYROLLS_ELEMID = 'my-rolls'
 
-class LightGgData {
+class LightGgDataScraper {
 
     /**
      * Opens a window to light.gg and gets the html body, or the specified element
@@ -121,12 +123,12 @@ class LightGgData {
                     $(rowElem).find('.sockets > ul').each((colIndex, colElem) => {
                         //perks
                         if (colIndex < 4) {
-                            $(colElem).children('li').each((perkColIndex, perkElem) => {
+                            $(colElem).children('li').each((perkRowIndex, perkElem) => {
                                 
                                 let pref = $(perkElem).attr("class")
                                 let perkId = $($(perkElem).children("a")[0]).attr("data-id")
 
-                                rollData[itemUUID].rolls.push({id: perkId, pref: pref, column: colIndex+1})
+                                rollData[itemUUID].rolls.push({id: perkId, pref: pref, column: colIndex, row: perkRowIndex})
                             })
                         } else {
                             //mod and masterwork
