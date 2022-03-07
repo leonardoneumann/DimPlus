@@ -1,24 +1,13 @@
+/** @module DIM */
 
-function setDIMObservers() {
-  let inventory_observer = new MutationObserver((_, quit) => {
-      if (document.getElementsByClassName('item')[0]) {
-          window.dispatchEvent(new Event('inventory_ready'))
-          quit.disconnect()
-      }
-  })
-  inventory_observer.observe(document, {
-      childList: true,
-      subtree: true
-  })
-}
-
-
-window.addEventListener('inventory_ready', () => {
-
-    var lastItemId;
-
-    document.getElementById('app').addEventListener('click', async (event) => {
-        //let isOrganizer = document.location.href.indexOf('organizer') > 0
+class DimInventory {
+    
+    lastClickedItemId = null;
+    /**
+     * Hooks into clicks to item tiles
+     * @param {MouseEvent} event 
+     */
+    async onInventoryItemClick(event) {
 
         let isItempopupClick = $(event.target).parents(".item-popup").length;
 
@@ -34,7 +23,7 @@ window.addEventListener('inventory_ready', () => {
                     let openSheetLink = $(itemPopup).find('a')[0]
                     //try to get data opening the sheet page with a fake click
                     if(openSheetLink) {
-                        lastItemId = null
+                        this.lastClickedItemId = null
                         openSheetLink.click()
                         return
                     }
@@ -50,12 +39,12 @@ window.addEventListener('inventory_ready', () => {
                     closeSheet.click()
 
                 if(itemId) {
-                    lastItemId = itemId
-                    CommunityRolls.GetItemAvgRollsFromLightGg(itemId).then(rollsData => {
+                    this.lastClickedItemId = itemId
+                    LightGgDataScraper.GetItemAvgRolls(itemId).then(rollsData => {
                         CommunityRolls.AppendToItemPopup(rollsData)
                     })
                 } else {
-                    lastItemId = null
+                    this.lastClickedItemId = null
                 }
             
             } catch (error) {
@@ -72,9 +61,9 @@ window.addEventListener('inventory_ready', () => {
                 isCompareButton = $(event.target).parent().children(scaleClassName).length > 0
             }
             
-            if(isCompareButton && lastItemId) {
-                let myItemRolls = await CommunityRolls.GetAllMyRollsFromLightGg(lastItemId)
-                let avgData = await CommunityRolls.GetItemAvgRollsFromLightGg(lastItemId)
+            if(isCompareButton && this.lastClickedItemId) {
+                let avgData = await LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemId)
+                let myItemRolls = await LightGgDataScraper.GetAllMyRolls(this.lastClickedItemId)
 
                 if(myItemRolls.length > 0 && avgData.length > 0) {
 
@@ -84,5 +73,8 @@ window.addEventListener('inventory_ready', () => {
             }
         }
 
-    })
-}, {once: true})
+    }
+
+
+}
+

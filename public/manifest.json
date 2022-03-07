@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "DIM Plus",
   "description": "Some added features to DIM to make my life easier",
-  "version": "0.4",
+  "version": "0.5",
   "homepage_url": "https://github.com/leonardoneumann/DimPlus",
   "icons": {
     "16": "icon16.png",
@@ -28,10 +28,14 @@
       "./Background/service.js",
 
       "./LightGG/dataScraper.js",
-      "./DIM/events.js",
+      "./LightGG/dataParser.js",
+
+      "./DIM/events.inventory.js",
+      "./DIM/events.init.js",
       "./DIM/communityrolls.js",
 
-      "./main.js"
+      "./main.js",
+      "./main.react.js"
     ],
     "css": [
       "./DIM/styles.css"

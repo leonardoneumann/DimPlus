@@ -1,12 +1,13 @@
-.relative-percent-container {
+.avg-percent-container {
     position: absolute;
     font-family: "Roboto Condensed", Helvetica, Arial, sans-serif;
     font-weight: 700;
     text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+    top: 5px;
+    left: 9px;
 }
 
-.relative-percent-bar {
-    
+.avg-percent-bar {
     color: #ffffffcf;
 
     font-size: 10px;
@@ -14,17 +15,27 @@
     line-height: 12px;
 
     position: absolute;
-    top: 21px;
-    left: -2px;
+    top: 16px;
+    left: -9px;
     width: 30px;
     height: 11px;
 }
 
-.relative-percent-place {
+.avg-percent-bar__compare {
+    font-size: 8px;
+    width: 28px;
+    height: 9px;
+}
+
+.avg-percent-place {
     color: #ffffffcf;
     font-size: 12px;
 
     position: absolute;
-    top: -4px;
-    left: -3px;
+    top: -10px;
+    left: -10px;
+}
+
+.avg-percent-place__compare {
+    font-size: 10px;
 }
