@@ -22,7 +22,7 @@
     "matches": ["https://app.destinyitemmanager.com/*", "https://beta.destinyitemmanager.com/*"],
     "all_frames": true,
     "js": [
-      "./jquery.js",
+      "./jquery.min.js",
       "./appmessages.js",
 
       "./Background/service.js",
