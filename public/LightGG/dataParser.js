@@ -76,7 +76,7 @@ class LightGgDataParser {
 
             let rollData = []
 
-            $(rollsHtml).filter('.clearfix').each((rowIndex, rowElem) => {
+            $(rollsHtml).children('.clearfix.roll').each((rowIndex, rowElem) => {
                 //let itemUUID = $(rowElem).find(".roll-header > .sharer > a[href^='/god-roll/roll-appraiser/#']")[0].href.split('#')[1]
                 let itemUUID = $(rowElem).attr('id').split('-')[1]
 

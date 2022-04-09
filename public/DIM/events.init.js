@@ -1,17 +1,16 @@
 /** @module DIM */
 
 const DIM_EVENT_INVENTORY_READY = 'dim_inventory_ready'
-
-const Inventory = new DimInventory();
-
 class DimEvents {
+
+    Inventory = new DimInventoryEvents();
 
     /**
      * Initializes event listeners , called from the main entrypoint
      */
     Initialize() {
         this.SetInventoryReadyListener(() =>{
-            document.getElementById('app').addEventListener('click', Inventory.onInventoryItemClick)
+            document.getElementById('app').addEventListener('click', this.Inventory.onItemClick)
         })
     }
 

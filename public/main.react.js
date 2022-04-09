@@ -1,8 +1,3 @@
-/* global chrome */
-chrome.runtime.onMessage.addListener(function(request, sender, callback) {
-    //bootstrapReactApp();
-  });
-  
 //React Bootstrapper
 function bootstrapReactApp() {
     // eslint-disable-next-line no-undef

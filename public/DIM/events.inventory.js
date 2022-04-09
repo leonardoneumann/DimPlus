@@ -1,13 +1,13 @@
 /** @module DIM */
 
-class DimInventory {
+class DimInventoryEvents {
     
     lastClickedItemId = null;
     /**
      * Hooks into clicks to item tiles
      * @param {MouseEvent} event 
      */
-    async onInventoryItemClick(event) {
+    async onItemClick(event) {
 
         let isItempopupClick = $(event.target).parents(".item-popup").length;
 
