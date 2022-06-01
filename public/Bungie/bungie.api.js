@@ -28,7 +28,7 @@ class BungieApi {
             method: request.method,
             mode: 'cors',
             headers: {
-                'X-API-Key': BUNGIE_API_KEY,
+                'X-API-Key': BUNGIE_API_KEY(),
                 'Content-Type': request.contentType || 'application/x-www-form-urlencoded'
             }
         }
