@@ -36,9 +36,9 @@ class LightGgDataScraper {
 
     /**
      * Opens a window to light.gg and gets the html body, or the specified element
-     * @param {int} itemId Id of the item to load.
-     * @param {string} [elementId] element id to retrieve
-     * @param {string} [anchorId] anchor id to attach to the link so that the window autoscroll there
+     * @param itemId Id of the item to load.
+     * @param elementId element id to retrieve
+     * @param anchorId anchor id to attach to the link so that the window autoscroll there
      * @returns {string} Html data
      */
     static async #GetHtmlItemDbData({itemId, elementId, anchorId}) {
