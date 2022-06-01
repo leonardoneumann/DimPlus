@@ -75,14 +75,15 @@ class LightGgDataParser {
             let rollsHtml = $.parseHTML(html)
 
             let rollData = []
+            let rollDataIndex = 0
 
             $(rollsHtml).children('.clearfix.roll').each((rowIndex, rowElem) => {
                 //let itemUUID = $(rowElem).find(".roll-header > .sharer > a[href^='/god-roll/roll-appraiser/#']")[0].href.split('#')[1]
                 let itemUUID = $(rowElem).attr('id').split('-')[1]
 
                 if(itemUUID) {
-                    rollData.length++
-                    rollData[itemUUID] = { uuid: itemUUID, rolls: [] }
+                    
+                    rollData.push({ uuid: itemUUID, rolls: [] })
 
                     //let rolls = $(rowElem).find(".pref a[href^='/db/items/']")
 
@@ -94,12 +95,14 @@ class LightGgDataParser {
                                 let pref = $(perkElem).attr("class")
                                 let perkId = $($(perkElem).children("a")[0]).attr("data-id")
 
-                                rollData[itemUUID].rolls.push({id: perkId, pref: pref, column: colIndex, row: perkRowIndex})
+                                rollData[rollDataIndex].rolls.push({id: perkId, pref: pref, column: colIndex, row: perkRowIndex})
                             })
                         } else {
                             //mod and masterwork
                         }
                     })
+
+                    rollDataIndex++
                 }
             })
 

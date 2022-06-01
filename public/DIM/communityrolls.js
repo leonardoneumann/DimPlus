@@ -81,7 +81,8 @@ class CommunityRolls {
                         
                         $(colElem).find('.socket-container.notIntrinsic').each((rowIndex, rollElem) => {
                             //console.log(`curItemUUID : ${curItemUUID} colIndex : ${colIndex} rowIndex : ${rowIndex}`)
-                            let curRoll = myItemRolls[curItemUUID].rolls.find(r => r.column === colIndex - 1 && r.row === rowIndex)
+                            let curRoll = myItemRolls.find(r => r.uuid === curItemUUID)
+                                               .rolls.find(r => r.column === colIndex - 1 && r.row === rowIndex)
 
                             if(curRoll){
                                 let curRollStats = avgRolls.find(p => p.perkId === curRoll.id)

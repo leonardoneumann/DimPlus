@@ -26,6 +26,7 @@
       "./appmessages.js",
 
       "./Background/service.js",
+      "./Util/cache.js",
 
       "./LightGG/data.scraper.js",
       "./LightGG/data.parser.js",

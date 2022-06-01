@@ -8,8 +8,11 @@ class BungieApi {
     /** @type {Object} DIM 'authorization' object from localstorage */
     authorizationInfo
 
+    cacheManager
+
     constructor() {
         this.#loadConfig()
+        this.cacheManager = new CacheManager()
     }
 
     #getFromLocalStorage(key) {
@@ -39,9 +42,9 @@ class BungieApi {
 
         try {    
             //Add error handling
-            let response = await fetch(`${BUNGIE_API_BASEURL}${request.url}` , requestInfo)
+            let response = await this.cacheManager.getRequestData(new Request(`${BUNGIE_API_BASEURL}${request.url}` , requestInfo))
 
-            return response.ok ? response.json() : null
+            return response?.ErrorStatus === "Success" ? response : null
         }
         catch(err) {
             throw `BungieApi.Request(): Error fetching from ${request.url} : ${err.message}`

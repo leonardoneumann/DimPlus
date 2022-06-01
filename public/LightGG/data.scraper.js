@@ -12,10 +12,22 @@ class LightGgDataScraper {
      * @returns {ObjectArray} Community roll data objects array
      */
     static async GetItemAvgRolls(itemId) {
+
+        const cacheKey = `/lightgg-avg-roll-${itemId}`
+
+        let cache = new CacheManager()
+        let cachedData = await cache.getKeyData(cacheKey)
+
+        if(cachedData)
+            return cachedData
+
         let ItemDbHtml = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_COMMUNITY_AVG_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
 
         if(ItemDbHtml) {
             let rollData = LightGgDataParser.ProcessCommunityAvgRollsItemDbHtml(ItemDbHtml)
+            if(rollData) {
+                cache.setKeyData(cacheKey, rollData)
+            }
             return rollData
         }
     }
@@ -26,10 +38,22 @@ class LightGgDataScraper {
      * @returns {Array} Community roll data objects array
      */
     static async GetAllMyRolls(itemId) {
+
+        const cacheKey = `/lightgg-all-rolls-${itemId}`
+
+        let cache = new CacheManager()
+        let cachedData = await cache.getKeyData(cacheKey)
+
+        if(cachedData && cachedData.length)
+            return cachedData
+
         let ItemDbHtml = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_MYROLLS_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
 
         if(ItemDbHtml) {
             let rollData = LightGgDataParser.ProcessMyRollsItemDbHtml(ItemDbHtml)
+            if(rollData) {
+                cache.setKeyData(cacheKey, rollData)
+            }
             return rollData
         }
     }
