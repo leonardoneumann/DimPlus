@@ -1,6 +1,6 @@
 {
   "name": "dim-plus-extension",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "dependencies": {
     "indexed-db.es6": "^1.0.0",

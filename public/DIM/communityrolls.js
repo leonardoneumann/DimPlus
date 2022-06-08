@@ -85,7 +85,7 @@ class CommunityRolls {
                                                .rolls.find(r => r.column === colIndex - 1 && r.row === rowIndex)
 
                             if(curRoll){
-                                let curRollStats = avgRolls.find(p => p.perkId === curRoll.id)
+                                let curRollStats = avgRolls.find(p => p.perkId === curRoll.id.toString())
 
                                 if(curRollStats) {
                                     $(rollElem).append(this.#createRollPercentPlaceElement(curRollStats))

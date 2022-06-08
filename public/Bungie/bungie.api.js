@@ -8,11 +8,8 @@ class BungieApi {
     /** @type {Object} DIM 'authorization' object from localstorage */
     authorizationInfo
 
-    cacheManager
-
     constructor() {
         this.#loadConfig()
-        this.cacheManager = new CacheManager()
     }
 
     #getFromLocalStorage(key) {
@@ -26,7 +23,9 @@ class BungieApi {
         this.authorizationInfo = this.#getFromLocalStorage('authorization')
     }
 
-    async execRequest(request) {
+
+
+    async execRequest(request, useCache = false) {
         let requestInfo = {
             method: request.method,
             mode: 'cors',
@@ -41,10 +40,16 @@ class BungieApi {
         }
 
         try {    
-            //Add error handling
-            let response = await this.cacheManager.getRequestData(new Request(`${BUNGIE_API_BASEURL}${request.url}` , requestInfo))
+            if(useCache) {
+                let response = await CacheManager.fetch(new Request(`${BUNGIE_API_BASEURL}${request.url}` , requestInfo))
 
-            return response?.ErrorStatus === "Success" ? response : null
+                return response?.ErrorStatus === "Success" ? response : null
+            } else { 
+                //Add error handling
+                let response = await fetch(`${BUNGIE_API_BASEURL}${request.url}` , requestInfo)
+
+                return response.ok ? response.json() : null
+            }
         }
         catch(err) {
             throw `BungieApi.Request(): Error fetching from ${request.url} : ${err.message}`
@@ -67,6 +72,7 @@ class BungieApi {
      * Gets Item
      * @param id membershipId
      * @param platform membershipType
+     * @param {int} itemInstanceId Item UUID
      * @returns {Object} User Manifest data
      */
     async getItem({id, platform}, itemInstanceId) {
@@ -88,7 +94,7 @@ class BungieApi {
             useAuth: true
         }
 
-        let res = await this.execRequest(request)
+        let res = await this.execRequest(request, true)
 
         return res?.Response
     }
@@ -99,7 +105,7 @@ class BungieApi {
      * @param platform membershipType
      * @returns {Object} User Manifest data
      */
-    async getInventory({id, platform}) {
+    async getInventoryAndEquipment({id, platform}) {
         let components = [
             DestinyComponentType.ProfileInventories,
             DestinyComponentType.CharacterInventories,
@@ -107,11 +113,11 @@ class BungieApi {
             DestinyComponentType.ItemStats,
             DestinyComponentType.ItemSockets,
             DestinyComponentType.ItemReusablePlugs
-        ].join(',')
+        ]
 
         let res = await this.getUserProfileComponents({id, platform, components})
 
-        return res?.Response
+        return res
     }
 
     /**
@@ -119,16 +125,17 @@ class BungieApi {
      * @param id membershipId
      * @param platform membershipType
      * @param {Array<DestinyComponentType>} components
+     * @param {Boolean} cache use cache
      * @returns {Object} User Manifest data
      */
-    async getUserProfileComponents({id, platform, components}) {
+    async getUserProfileComponents({id, platform, components, cache}) {
         let request = {
             url: `Destiny2/${platform}/Profile/${id}/?components=${components.join(',')}`,
             method: 'GET',
             useAuth: true
         }
 
-        let res = await this.execRequest(request)
+        let res = await this.execRequest(request, cache)
 
         return res?.Response
     }

@@ -14,9 +14,7 @@ class LightGgDataScraper {
     static async GetItemAvgRolls(itemId) {
 
         const cacheKey = `/lightgg-avg-roll-${itemId}`
-
-        let cache = new CacheManager()
-        let cachedData = await cache.getKeyData(cacheKey)
+        let cachedData = await CacheManager.readDataFromCache(cacheKey)
 
         if(cachedData)
             return cachedData
@@ -26,23 +24,21 @@ class LightGgDataScraper {
         if(ItemDbHtml) {
             let rollData = LightGgDataParser.ProcessCommunityAvgRollsItemDbHtml(ItemDbHtml)
             if(rollData) {
-                cache.setKeyData(cacheKey, rollData)
+                CacheManager.saveDataToCache(cacheKey, rollData)
             }
             return rollData
         }
     }
     
     /**
-     * Retrieves all rolls and items of a single itemid from Light.gg
+     * @deprecated use the API now
      * @param {any} itemId 
      * @returns {Array} Community roll data objects array
      */
     static async GetAllMyRolls(itemId) {
 
         const cacheKey = `/lightgg-all-rolls-${itemId}`
-
-        let cache = new CacheManager()
-        let cachedData = await cache.getKeyData(cacheKey)
+        let cachedData = await CacheManager.readDataFromCache(cacheKey)
 
         if(cachedData && cachedData.length)
             return cachedData
@@ -52,7 +48,7 @@ class LightGgDataScraper {
         if(ItemDbHtml) {
             let rollData = LightGgDataParser.ProcessMyRollsItemDbHtml(ItemDbHtml)
             if(rollData) {
-                cache.setKeyData(cacheKey, rollData)
+                CacheManager.saveDataToCache(cacheKey, rollData)
             }
             return rollData
         }

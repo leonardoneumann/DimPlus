@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "DIM Plus",
   "description": "Some added features to DIM to make my life easier",
-  "version": "0.6",
+  "version": "0.7",
   "homepage_url": "https://github.com/leonardoneumann/DimPlus",
   "icons": {
     "16": "icon16.png",
@@ -31,8 +31,9 @@
       "./LightGG/data.scraper.js",
       "./LightGG/data.parser.js",
 
-      "./Bungie/bungie.api.js",
       "./Bungie/bungie.enums.js",
+      "./Bungie/bungie.api.js",
+      "./Bungie/bungie.user.js",
 
       "./DIM/item.idb.js",
       "./DIM/events.inventory.js",

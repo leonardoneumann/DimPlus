@@ -3,12 +3,17 @@
 class DimInventoryEvents {
 
     lastClickedItemHash = null;
+    currentUser
 
     /**
      * Hooks into clicks to item tiles
      * @param {MouseEvent} event 
      */
     async onItemClick(event) {
+
+        if(!this.currentUser) {
+            this.currentUser = new BungieUser()
+        }
 
         let isItempopupClick = $(event.target).parents(".item-popup").length;
 
@@ -19,11 +24,8 @@ class DimInventoryEvents {
                 let itemId = itemEl[0].id
     
                 if(itemId) {
-                    let api = new BungieApi()
-                    let user = await api.getCurrentUserProfile()
-                    let res = await api.getItem(user, itemId)
-
-                    this.lastClickedItemHash = res.item.data.itemHash
+                    let item = await this.currentUser.getItemByInstanceId(itemId)
+                    this.lastClickedItemHash = item.itemHash
     
                     LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemHash).then(rollsData => {
                         CommunityRolls.AppendToItemPopup(rollsData)
@@ -44,7 +46,8 @@ class DimInventoryEvents {
             
             if(isCompareButton && this.lastClickedItemHash) {
                 let avgData = await LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemHash)
-                let myItemRolls = await LightGgDataScraper.GetAllMyRolls(this.lastClickedItemHash)
+
+                let myItemRolls = await this.currentUser.getAllMyItemsAndPerkRolls(this.lastClickedItemHash)
 
                 if(myItemRolls.length > 0 && avgData.length > 0) {
 
