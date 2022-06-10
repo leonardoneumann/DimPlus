@@ -13,7 +13,7 @@ window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.ms
 // (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
 
 if (!window.indexedDB) {
-    console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+    console.log("Your browser doesn't support a stable version of IndexedDB.");
 }
 
 CacheManager.pruneOldVersions()

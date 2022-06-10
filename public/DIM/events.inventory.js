@@ -3,6 +3,8 @@
 class DimInventoryEvents {
 
     lastClickedItemHash = null;
+
+    /** @type BungieUser */
     currentUser
 
     /**
@@ -24,12 +26,16 @@ class DimInventoryEvents {
                 let itemId = itemEl[0].id
     
                 if(itemId) {
-                    let item = await this.currentUser.getItemByInstanceId(itemId)
+                    let item = await this.currentUser.getItemByIID(itemId)
                     this.lastClickedItemHash = item.itemHash
-    
-                    LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemHash).then(rollsData => {
-                        CommunityRolls.AppendToItemPopup(rollsData)
-                    })
+
+                    try {
+                        let lightGgItemAvgRolls = await LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemHash)
+                        let myItemRolls = await this.currentUser.getItemRollsForIID(itemId)
+                        CommunityRolls.AppendToItemPopup(lightGgItemAvgRolls, myItemRolls)
+                    } catch (err) {
+                        console.log(err)
+                    }
                 }
             }
 
@@ -47,7 +53,7 @@ class DimInventoryEvents {
             if(isCompareButton && this.lastClickedItemHash) {
                 let avgData = await LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemHash)
 
-                let myItemRolls = await this.currentUser.getAllMyItemsAndPerkRolls(this.lastClickedItemHash)
+                let myItemRolls = await this.currentUser.getAllMyItemsPerkRolls(this.lastClickedItemHash)
 
                 if(myItemRolls.length > 0 && avgData.length > 0) {
 

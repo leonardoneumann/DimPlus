@@ -6,50 +6,33 @@ class CommunityRolls {
     /**
      * Processes roll data and appends it to the DIM popup window
      * @param {ObjectArray} rollsData 
+     * @param {Object} itemRolls
      */
-    static AppendToItemPopup(rollsData) {
+    static AppendToItemPopup(rollsData, itemRolls) {
         
-        if(!rollsData) return
+        if(!rollsData || !itemRolls) return
+
+        itemRolls = itemRolls.flat()
         
         const perkGrid = $(document.body).find(".item-popup .item-details-body .sockets").children()[1]
+        let isGrid = $(perkGrid).find("button").children('.fa-list').length
     
+        let rollContainers = []
         if(perkGrid) {
             $(perkGrid).find("image[href^='https://www.bungie.net/']").each((index, imgElem) => {
     
-                let parentDiv = $(imgElem).parent().parent().parent() //up three levels
-                let roll
-                let guessed = false
-    
-                if(parentDiv)
-                {
-                    let childs = $(parentDiv).parent().children()
-                    if(childs && childs.length > 1) {
-                        let curPerkName = childs[1].innerText //Perk Name
-                        roll = rollsData.find(r => r.imgUrl === imgElem.href.baseVal && r.name === curPerkName)
-                    }
-    
-                    //we'll just guess here, where we dont have the perkname on the item-popup
-                    // or if the language differs from light.gg and DIM
-                    if(!roll) {
-                        
-                        let rolls = rollsData.filter(r => r.imgUrl === imgElem.href.baseVal)
-    
-                        if (rolls.length > 1) {
-                            //this case needs a fix , same icon for different perks is a problem without having the exact item uid
-                            //or the perk name
-                            roll = rolls[0]
-                            guessed = true
-                        } else if (rolls.length === 1) {
-                            roll = rolls[0]
-                        }
-                    }
-                        
-                }
+                rollContainers.push($(imgElem).parent().parent().parent()) //up three levels
 
-                if(roll || guessed)
-                    $(parentDiv).append(guessed ? this.#createRollPercentPlaceElement({guessed: guessed}) 
-                                                : this.#createRollPercentPlaceElement(roll))
             })
+
+            if(rollContainers.length && isGrid) {
+                rollContainers.forEach((rollElem, index) => {
+                    let roll = rollsData.find(r => r.perkId == itemRolls[index].id)
+
+                    if(roll)
+                        $(rollElem).append(this.#createRollPercentPlaceElement(roll))
+                })
+            }
         }
     }
 

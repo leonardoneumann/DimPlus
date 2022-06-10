@@ -30,6 +30,33 @@ class CacheManager {
     }
 
     /**
+     *
+     *
+     * @static
+     * @param {String} key
+     * @param {Function} fetchFn 
+     * @param {*} [cacheLife=CACHE_DEFAULT_LIFE]
+     * @return {*} 
+     * @memberof CacheManager
+     */
+    static async fetchAny(key, fetchFn, cacheLife = CACHE_DEFAULT_LIFE) {
+        let cachedData = await CacheManager.readDataFromCache(key)
+
+        if(cachedData && cachedData.length) {
+            return cachedData
+        } else {
+            let data = await fetchFn()
+
+            if(data) {
+                CacheManager.saveDataToCache(key, data, cacheLife)
+                return data
+            } else {
+                return null
+            }
+        }
+    }
+
+    /**
      * Reads request response from cache
      * @param {RequestInfo} requestInfo RequestInfo object or key name
      * @param {string} cacheKeyRoot Cache name
@@ -45,20 +72,40 @@ class CacheManager {
 
         let resp = await cachedResponse.json()
 
-        if (resp.cacheCreation && resp.cacheLife && resp.cacheData) {
-            let createTime = new Date(resp.cacheCreation).getTime()
+        if(resp.cacheLife) {
+            if(this.checkCacheLife(resp)) {
+                return resp.cacheData
+            } else {
+                await cacheStorage.delete(requestInfo)
+                return false
+            }
+        } else {
+            return resp
+        }
+    }
+
+    /**
+     *
+     *
+     * @static
+     * @param {Object} cache cache object
+     * @return {*} 
+     * @memberof CacheManager
+     */
+    static checkCacheLife(cache) {
+        if (cache.cacheCreation && cache.cacheLife && cache.cacheData) {
+            let createTime = new Date(cache.cacheCreation).getTime()
             let cacheLife = Date.now() - createTime
 
             console.log(cacheLife)
 
-            if (cacheLife > (1000 * 60 * resp.cacheLife)) {
-                cacheStorage.delete(requestInfo)
+            if (cacheLife > (1000 * 60 * cache.cacheLife)) {
                 return false
             } else {
-                return resp.cacheData
+                return true
             }
         } else {
-            return resp
+            return false
         }
     }
 
@@ -92,8 +139,13 @@ class CacheManager {
         
         await cacheStorage.put(key, resp)
     }
-    
-    // Delete any old caches to respect user's disk space.
+
+    /**
+     * Delete any old caches to respect user's disk space.
+     *
+     * @static
+     * @memberof CacheManager
+     */
     static async pruneOldVersions() {
         const keys = await caches.keys();
     
@@ -109,17 +161,7 @@ class CacheManager {
     }
 
     static async pruneExpiredRecords() {
-        const keys = await caches.keys();
-    
-        for (const key of keys) {
-            const isOurCache = CACHE_KEY_PREFIX === key.substring(0, 6);
-        
-            if (CACHE_ROOT === key || ! isOurCache) {
-                continue;
-            }
-        
-            caches.delete(key);
-        }
+        // should do the same as pruneOldVersions but checking the cache life
     }
  
 }

@@ -12,6 +12,13 @@ class BungieApi {
         this.#loadConfig()
     }
 
+    /**
+     * 
+     * @private
+     * @param {*} key
+     * @return {*} 
+     * @memberof BungieApi
+     */
     #getFromLocalStorage(key) {
         let val = localStorage.getItem(key)
         if(val && val.length) {
@@ -19,12 +26,25 @@ class BungieApi {
         }
     }
 
+    /**
+     *
+     *
+     * @memberof BungieApi
+     */
     #loadConfig() {
         this.authorizationInfo = this.#getFromLocalStorage('authorization')
     }
 
 
 
+    /**
+     *
+     *
+     * @param {Object} request
+     * @param {boolean} [useCache=false]
+     * @return {Object} response object or null
+     * @memberof BungieApi
+     */
     async execRequest(request, useCache = false) {
         let requestInfo = {
             method: request.method,
@@ -56,6 +76,12 @@ class BungieApi {
         }
     }
 
+    /**
+     *
+     *
+     * @return {*} 
+     * @memberof BungieApi
+     */
     async getUserProfiles() {
         let request = {
             url: `Destiny2/254/Profile/${this.authorizationInfo.bungieMembershipId}/LinkedProfiles/?getAllMemberships=true`,
@@ -140,6 +166,12 @@ class BungieApi {
         return res?.Response
     }
 
+    /**
+     *
+     *
+     * @return {*} 
+     * @memberof BungieApi
+     */
     async getCurrentUserProfile() {
         let profiles
 

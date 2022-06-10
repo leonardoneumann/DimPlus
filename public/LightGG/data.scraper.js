@@ -14,20 +14,17 @@ class LightGgDataScraper {
     static async GetItemAvgRolls(itemId) {
 
         const cacheKey = `/lightgg-avg-roll-${itemId}`
-        let cachedData = await CacheManager.readDataFromCache(cacheKey)
-
-        if(cachedData)
-            return cachedData
-
-        let ItemDbHtml = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_COMMUNITY_AVG_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
-
-        if(ItemDbHtml) {
-            let rollData = LightGgDataParser.ProcessCommunityAvgRollsItemDbHtml(ItemDbHtml)
-            if(rollData) {
-                CacheManager.saveDataToCache(cacheKey, rollData)
+        const fetchData = async () => {
+            let html = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_COMMUNITY_AVG_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
+            if(html) {
+                let rollData = LightGgDataParser.ProcessCommunityAvgRollsItemDbHtml(html)
+                if(rollData)
+                    return rollData
             }
-            return rollData
+            return false
         }
+
+        return await CacheManager.fetchAny(cacheKey, fetchData)
     }
     
     /**
