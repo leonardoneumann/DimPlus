@@ -42,14 +42,14 @@ class CacheManager {
     static async fetchAny(key, fetchFn, cacheLife = CACHE_DEFAULT_LIFE) {
         let cachedData = await CacheManager.readDataFromCache(key)
 
-        if(cachedData && cachedData.length) {
+        if(cachedData) {
             return cachedData
         } else {
-            let data = await fetchFn()
+            let newData = await fetchFn()
 
-            if(data) {
-                CacheManager.saveDataToCache(key, data, cacheLife)
-                return data
+            if(newData) {
+                CacheManager.saveDataToCache(key, newData, cacheLife)
+                return newData
             } else {
                 return null
             }

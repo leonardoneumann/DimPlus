@@ -64,7 +64,7 @@ class BungieUser {
         const fetchData = async () => {
             return await this.api.getInventoryAndEquipment(await this.getCurrentUser())
         }
-        return await CacheManager.fetchAny('/all-my-items', fetchData, 3)
+        return await CacheManager.fetchAny('/inventory', fetchData, 3)
     }
 
     /**
@@ -91,13 +91,21 @@ class BungieUser {
      * @memberof BungieUser
      */
     async getAllMyItemsPerkRolls(itemHash) {
-        let myItems = await this.getInventoryAllItems()
+        let inventory = await this.getInventory()
+        let myItems = await this.getInventoryAllItems(inventory)
 
         let foundItems = myItems.filter(it => it.itemHash === itemHash)
+
+        let foundRolls = await Promise.all(
+            foundItems.map(async it => {
+                let rolls = await this.getItemRollsForIID(it.itemInstanceId, inventory)
+                return { 
+                    uuid: it.itemInstanceId,
+                    rolls: rolls.flat() 
+                }
+            })
+        )
         
-        return foundItems.map(async it => {
-            let rolls = await this.getItemRollsForIID(it.itemInstanceId)
-            return { uuid: it.itemInstanceId, rolls: rolls.flat()}
-        })
+        return foundRolls
     }
 }

@@ -32,7 +32,7 @@ class DimInventoryEvents {
                     try {
                         let lightGgItemAvgRolls = await LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemHash)
                         let myItemRolls = await this.currentUser.getItemRollsForIID(itemId)
-                        CommunityRolls.AppendToItemPopup(lightGgItemAvgRolls, myItemRolls)
+                        CommunityRolls.AppendToItemPopup(lightGgItemAvgRolls, myItemRolls.flat())
                     } catch (err) {
                         console.log(err)
                     }
@@ -57,7 +57,7 @@ class DimInventoryEvents {
 
                 if(myItemRolls.length > 0 && avgData.length > 0) {
 
-                    CommunityRolls.AppendToCompare(myItemRolls, avgData)
+                    CommunityRolls.AppendToCompare(myItemRolls.flat(), avgData)
 
                 }
             }
