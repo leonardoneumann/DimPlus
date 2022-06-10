@@ -97,8 +97,6 @@ class CacheManager {
             let createTime = new Date(cache.cacheCreation).getTime()
             let cacheLife = Date.now() - createTime
 
-            console.log(cacheLife)
-
             if (cacheLife > (1000 * 60 * cache.cacheLife)) {
                 return false
             } else {
@@ -118,7 +116,6 @@ class CacheManager {
         let cachedData = await this.#getCachedRequest(key);
     
         if (cachedData) {
-            console.log( 'Retrieved cached data' );
             return cachedData;
         }
 

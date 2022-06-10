@@ -16,22 +16,55 @@ class CommunityRolls {
         
         const perkGrid = $(document.body).find(".item-popup .item-details-body .sockets").children()[1]
         let isGrid = $(perkGrid).find("button").children('.fa-list').length
-        let isList = $(perkGrid).find("button").children('.fa-grid').length
+        let isList = $(perkGrid).find("button").children('.fa-th').length
     
         let rollContainers = []
         if(perkGrid) {
-            $(perkGrid).find("image[href^='https://www.bungie.net/']").each((index, imgElem) => {
-    
-                rollContainers.push($(imgElem).parent().parent().parent()) //up three levels
 
+            //gets all perk images
+            $(perkGrid).find("image[href^='https://www.bungie.net/']").each((index, imgElem) => {
+                rollContainers.push($(imgElem).parent().parent().parent()) //up three levels
             })
 
+            // if perks are listed as grid , its pretty straightforward
             if(rollContainers.length && isGrid) {
                 rollContainers.forEach((rollElem, index) => {
                     let roll = rollsData.find(r => r.perkId == itemRolls[index].id)
 
                     if(roll)
                         $(rollElem).append(this.#createRollPercentPlaceElement(roll))
+                })
+            }
+
+            //we'll just use the old method for lists until we do a re-paint of this whole section
+            if(rollContainers.length && isList) {
+                
+                rollContainers.forEach((rollElem, index) => { 
+
+                    let imgUrl = $(rollElem).find("image")[0]?.href.baseVal //
+                    let children = $(rollElem).parent().children()
+                    let curPerkName = children[1]?.innerText //Perk Name
+                    
+                    let guessed = false
+                    let roll = rollsData.find(r => r.imgUrl === imgUrl && r.name === curPerkName)
+
+                    if(!roll) {  
+                        let rolls = rollsData.filter(r => r.imgUrl === imgUrl)
+
+                        if (rolls.length > 1) {
+                            //this case needs a fix , same icon for different perks is a problem without having the exact item uid
+                            //or the perk name
+                            roll = rolls[0]
+                            guessed = true
+                        } else if (rolls.length === 1) {
+                            roll = rolls[0]
+                        }
+                    }
+
+                    if(roll || guessed)
+                        $(rollElem).append(guessed ? this.#createRollPercentPlaceElement({guessed: guessed}) 
+                                                    : this.#createRollPercentPlaceElement(roll))
+
                 })
             }
         }
