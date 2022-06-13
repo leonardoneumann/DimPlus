@@ -3,6 +3,7 @@
 const LIGHTGG_ITEMDB_URL = 'https://www.light.gg/db/items/'
 const LIGHTGG_COMMUNITY_AVG_ELEMID = 'community-average'
 const LIGHTGG_MYROLLS_ELEMID = 'my-rolls'
+const LIGHTGG_MAIN_ELEMID = 'main-column'
 
 class LightGgDataScraper {
 
@@ -26,6 +27,30 @@ class LightGgDataScraper {
 
         return await CacheManager.fetchAny(cacheKey, fetchData)
     }
+
+
+    /**
+     * Retrieves community average usage data for a certain item on Light.gg
+     * @param {any} itemId 
+     * @returns {ObjectArray} Community roll data objects array
+     */
+    static async GetExtraInfo(itemId) {
+
+        const cacheKey = `/lightgg-extra-info-${itemId}`
+
+        const fetchData = async () => {
+            let html = await this.#GetHtmlItemDbData({itemId, elementId: 'socket-container'})
+            if(html) {
+                let data = LightGgDataParser.ProcessExtraInfoItemDbHtml(html)
+                if(data)
+                    return data
+            }
+            return false
+        }
+
+        return await CacheManager.fetchAny(cacheKey, fetchData)
+
+    }
     
     /**
      * @deprecated use the API now
@@ -34,13 +59,7 @@ class LightGgDataScraper {
      */
     static async GetAllMyRolls(itemId) {
 
-        const cacheKey = `/lightgg-all-rolls-${itemId}`
-        let cachedData = await CacheManager.readDataFromCache(cacheKey)
-
-        if(cachedData && cachedData.length)
-            return cachedData
-
-        let ItemDbHtml = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_MYROLLS_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
+        let ItemDbHtml = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_MYROLLS_ELEMID, anchorId: LIGHTGG_MYROLLS_ELEMID})
 
         if(ItemDbHtml) {
             let rollData = LightGgDataParser.ProcessMyRollsItemDbHtml(ItemDbHtml)

@@ -112,4 +112,56 @@ class LightGgDataParser {
         }
     }
 
+
+    /**
+     * 
+     * @param {string} html Html string for the 'community-rolls' div element
+     * @returns {Array} Object array with roll data, including relative usage percentage and color, column position, img url, name
+     */
+    static ProcessExtraInfoItemDbHtml(html) {
+
+        let nodes = $.parseHTML(html)
+
+        const parseSection = (htmlSection) => {
+            let data = []
+            $(htmlSection).children('div').each((groupIndex, groupElem) => { 
+
+                let idsElems = $(groupElem).find('.item')
+                let namesElems = $(groupElem).find('.perk-names div')
+                let percentElem = $(groupElem).find('.combo-percent')[0]?.innerText.trim()
+                let ids = []
+                let imgs = []
+                let names = []
+    
+                for (const elem of idsElems) {
+                    ids.push(elem.dataset?.id)
+                    imgs.push($(elem).find('img')[0]?.src)
+                }
+    
+                for (const elem of namesElems) {
+                    names.push(elem?.innerText.replace('+', '').trim())
+                }
+    
+                data.push({
+                    ids: ids,
+                    imgs: imgs,
+                    names:  names,
+                    percentText: percentElem
+                })
+            })
+
+            return data
+        }
+
+        let combos = parseSection($(nodes).find('#trait-combos')[0])
+        let masterwork = parseSection($(nodes).find('#masterwork-stats')[0])
+        let mod = parseSection($(nodes).find('#mod-stats')[0])
+
+        return {
+            combos: combos,
+            masterwork: masterwork,
+            mod: mod
+        }
+    }
+
 }

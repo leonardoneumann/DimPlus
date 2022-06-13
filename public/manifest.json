@@ -52,8 +52,8 @@
     "tabs",
     "storage",
     "https://www.light.gg/*",
-    "https://app.destinyitemmanager.com/*",
-    "https://www.bungie.net/*"
+    "https://*.destinyitemmanager.com/*",
+    "https://*.bungie.net/*"
   ],
   "web_accessible_resources": [
     "index.html",

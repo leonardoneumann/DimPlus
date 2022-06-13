@@ -1,5 +1,7 @@
 /** @module DIM */
 
+/* global chrome */
+
 const DIM_EVENT_INVENTORY_READY = 'dim_inventory_ready'
 
 class DimEvents {
