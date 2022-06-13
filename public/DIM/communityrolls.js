@@ -115,6 +115,53 @@ class CommunityRolls {
         }
     }
 
+    static AppendExtraInfoToItemPopup(extraInfo) {
+        //pretty sure there is a better way to do this
+        let container = $(document.body).find('.item-popup').children().first().children().first()
+        let popupContiner = $('<div>', {
+            class: $(container).children().first().attr('class')
+        })
+
+        let popupContent = $('<div class="extra-popup">')
+
+        $(popupContent).append('<span>Popular Trait Combos</span>')
+
+        extraInfo.combos.forEach(info => {
+            popupContent.append(
+                `<div>
+                    <img src="${info.imgs[0]}"><img src="${info.imgs[1]}">
+                    <div>
+                        ${info.names[0]} + ${info.names[1]}<br />
+                        ${info.percentText}
+                    </div>
+                </div>`
+            )
+        })
+
+        const createSingleIconDiv = (data) => {
+            data.forEach(info => {
+                popupContent.append(
+                    `<div>
+                        <img src="${info.imgs[0]}">
+                        <div>
+                            ${info.names[0]}<br />
+                            ${info.percentText}
+                        </div>
+                    </div>`
+                )
+            })
+        }
+
+        $(popupContent).append('<span>Masterwork Popularity</span>')
+        createSingleIconDiv(extraInfo.masterwork)
+
+        $(popupContent).append('<span>Mod Popularity</span>')
+        createSingleIconDiv(extraInfo.mod)
+        
+        $(popupContiner).append(popupContent)
+        $(container).prepend(popupContiner)
+    }
+
     /**
      * Creates the div element to append to DIM
      * @param {string} place
