@@ -132,8 +132,7 @@ class CommunityRolls {
 
             itemRolls.forEach(r => {
                 info.ids.forEach((id,index) => {
-                    if(r.id == id)
-                        hasCombo[index] = true
+                    hasCombo[index] = (r.id == id)
                 })
             })
 

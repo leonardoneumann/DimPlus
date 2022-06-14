@@ -35,8 +35,6 @@ class BungieApi {
         this.authorizationInfo = this.#getFromLocalStorage('authorization')
     }
 
-
-
     /**
      *
      *
@@ -46,6 +44,8 @@ class BungieApi {
      * @memberof BungieApi
      */
     async execRequest(request, useCache = false) {
+        this.#loadConfig()
+        
         let requestInfo = {
             method: request.method,
             mode: 'cors',
