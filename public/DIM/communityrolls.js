@@ -128,15 +128,15 @@ class CommunityRolls {
 
         extraInfo.combos.forEach(info => {
 
-            let hasCombo = [false, false]
+            let foundRolls = 0
 
             itemRolls.forEach(r => {
                 info.ids.forEach((id,index) => {
-                    hasCombo[index] = (r.id == id)
+                    if (r.id == id) foundRolls++
                 })
             })
 
-            hasCombo = hasCombo[0] && hasCombo[1]
+            let hasCombo = foundRolls === info.ids.length
 
             popupContent.append(
                 `<div ${hasCombo ? "class='has-combo'" : ''}>
