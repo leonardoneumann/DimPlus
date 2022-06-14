@@ -3,7 +3,7 @@
 const LIGHTGG_ITEMDB_URL = 'https://www.light.gg/db/items/'
 const LIGHTGG_COMMUNITY_AVG_ELEMID = 'community-average'
 const LIGHTGG_MYROLLS_ELEMID = 'my-rolls'
-const LIGHTGG_MAIN_ELEMID = 'main-column'
+const LIGHTGG_SOCKETS_ELEMID = 'socket-container'
 
 class LightGgDataScraper {
 
@@ -39,7 +39,7 @@ class LightGgDataScraper {
         const cacheKey = `/lightgg-extra-info-${itemId}`
 
         const fetchData = async () => {
-            let html = await this.#GetHtmlItemDbData({itemId, elementId: 'socket-container'})
+            let html = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_SOCKETS_ELEMID })
             if(html) {
                 let data = LightGgDataParser.ProcessExtraInfoItemDbHtml(html)
                 if(data)
