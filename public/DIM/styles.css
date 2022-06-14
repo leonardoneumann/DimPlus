@@ -51,11 +51,12 @@
     overflow: auto;
     flex-direction: column;
     margin-left: 3px;
-    max-height: 515px;
+    margin-top: 3px;
+    max-height: 575px;
 }
 
 .extra-popup > span { 
-    background-color: #a9a9a9;
+    background-color: #333;
     width: 100%;
     text-align: center;
 }
@@ -73,4 +74,8 @@
 
 .extra-popup > div > img {
     height: 23px;
+}
+
+.extra-popup > .has-combo {
+    background-color: rgb(182, 160, 88);
 }

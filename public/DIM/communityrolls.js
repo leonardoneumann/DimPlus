@@ -115,7 +115,7 @@ class CommunityRolls {
         }
     }
 
-    static AppendExtraInfoToItemPopup(extraInfo) {
+    static AppendExtraInfoToItemPopup(extraInfo, itemRolls) {
         //pretty sure there is a better way to do this
         let container = $(document.body).find('.item-popup').children().first().children().first()
         let popupContiner = $('<div>', {
@@ -127,8 +127,20 @@ class CommunityRolls {
         $(popupContent).append('<span>Popular Trait Combos</span>')
 
         extraInfo.combos.forEach(info => {
+
+            let hasCombo = [false, false]
+
+            itemRolls.forEach(r => {
+                info.ids.forEach((id,index) => {
+                    if(r.id == id)
+                        hasCombo[index] = true
+                })
+            })
+
+            hasCombo = hasCombo[0] && hasCombo[1]
+
             popupContent.append(
-                `<div>
+                `<div ${hasCombo ? "class='has-combo'" : ''}>
                     <img src="${info.imgs[0]}"><img src="${info.imgs[1]}">
                     <div>
                         ${info.names[0]} + ${info.names[1]}<br />
