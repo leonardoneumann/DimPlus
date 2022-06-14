@@ -6,6 +6,8 @@ Some quality of life additions to our beloved DIM , for now only including basic
 
 ![Alt text](./2_lightgg_integration_compare.png?raw=true "Compare")
 
+![Alt text](./2_lightgg_integration_extra.png?raw=true "Trait combo popularity and more")
+
 ### Guide
 [How to install it](https://www.youtube.com/watch?v=em6Nu4GzXnA&ab_channel=LeoN)
 
