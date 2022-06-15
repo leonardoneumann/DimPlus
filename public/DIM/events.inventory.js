@@ -30,9 +30,12 @@ class DimInventoryEvents {
                     this.lastClickedItemHash = item.itemHash
 
                     try {
+                        CommunityRolls.ClearExtraInfoItemPopup()
+
                         let lightGgItemAvgRolls = await LightGgDataScraper.GetItemAvgRolls(this.lastClickedItemHash)
                         let myItemRolls = await this.currentUser.getItemRollsForIID(itemId)
                         myItemRolls = myItemRolls.flat()
+                        
                         CommunityRolls.AppendToItemPopup(lightGgItemAvgRolls, myItemRolls)
 
                         let exinf = await LightGgDataScraper.GetExtraInfo(this.lastClickedItemHash)

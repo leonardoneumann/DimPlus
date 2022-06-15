@@ -115,16 +115,34 @@ class CommunityRolls {
         }
     }
 
+    static ClearExtraInfoItemPopup() {
+        let extraInfoContainer = $(document.body).find('#extra-info-container').first()
+
+        if(extraInfoContainer.length) {
+            extraInfoContainer.remove()
+        }
+    }
+
+    /**
+     * Appends extra information regarding trait combos, masterwork and mod popularity 
+     * to the item popup
+     * @static
+     * @param {*} extraInfo
+     * @param {*} itemRolls
+     * @memberof CommunityRolls
+     */
     static AppendExtraInfoToItemPopup(extraInfo, itemRolls) {
-        //pretty sure there is a better way to do this
-        let container = $(document.body).find('.item-popup').children().first().children().first()
-        let popupContiner = $('<div>', {
-            class: $(container).children().first().attr('class')
-        })
 
-        let popupContent = $('<div class="extra-popup">')
+        let extraInfoContainer = $(document.body).find('.extra-info').first()
+        let createContainer = !(extraInfoContainer.length)
 
-        $(popupContent).append('<span>Popular Trait Combos</span>')
+        if(createContainer) {
+            extraInfoContainer = $('<div class="extra-info">')
+        } else {
+            extraInfoContainer.empty()
+        }
+
+        $(extraInfoContainer).append('<span>Popular Trait Combos</span>')
 
         extraInfo.combos.forEach(info => {
 
@@ -138,7 +156,7 @@ class CommunityRolls {
 
             let hasCombo = foundRolls === info.ids.length
 
-            popupContent.append(
+            extraInfoContainer.append(
                 `<div ${hasCombo ? "class='has-combo'" : ''}>
                     <img src="${info.imgs[0]}"><img src="${info.imgs[1]}">
                     <div>
@@ -151,7 +169,7 @@ class CommunityRolls {
 
         const createSingleIconDiv = (data) => {
             data.forEach(info => {
-                popupContent.append(
+                extraInfoContainer.append(
                     `<div>
                         <img src="${info.imgs[0]}">
                         <div>
@@ -163,14 +181,23 @@ class CommunityRolls {
             })
         }
 
-        $(popupContent).append('<span>Masterwork Popularity</span>')
+        $(extraInfoContainer).append('<span>Masterwork Popularity</span>')
         createSingleIconDiv(extraInfo.masterwork)
 
-        $(popupContent).append('<span>Mod Popularity</span>')
+        $(extraInfoContainer).append('<span>Mod Popularity</span>')
         createSingleIconDiv(extraInfo.mod)
-        
-        $(popupContiner).append(popupContent)
-        $(container).prepend(popupContiner)
+
+        if(createContainer) {
+            let container = $(document.body).find('.item-popup').children().first().children().first()
+            //pretty sure there is a better way to do this
+            let popupContainer = $('<div>', {
+                class: $(container).children().first().attr('class'),
+                id: 'extra-info-container'
+            })
+
+            $(popupContainer).append(extraInfoContainer)
+            $(container).prepend(popupContainer)
+        }
     }
 
     /**
