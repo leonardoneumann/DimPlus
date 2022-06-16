@@ -20,9 +20,9 @@ class DimInventoryEvents {
         let isItempopupClick = $(event.target).parents(".item-popup").length;
 
         if(!isItempopupClick) {
-            let itemEl = $(event.target).children().parentsUntil(".item-drag-container")
+            let itemEl = $(event.target).children().parentsUntil(".item-drag-container").first()
 
-            if(itemEl?.length === 1) {
+            if(itemEl.length === 1) {
                 let itemId = itemEl[0].id
     
                 if(itemId) {
