@@ -1,7 +1,7 @@
 /** @module Bungie */
 
 const BUNGIE_API_BASEURL = 'https://www.bungie.net/Platform/'
-const BUNGIE_API_KEY = () => window.location.toString().indexOf('beta.destinyitemmanager') ? atob("MmIxNmMyOTFmY2ZmNDhjYmFjODZiZDVmMWQwYmJjOWQ=") : atob(atob('TldWak1ERmpZV1kyWVdWbE5EVXdaRGxrWVdKbE5qUTJNamswWm1aa1l6az0='))
+const BUNGIE_API_KEY = () => window.location.toString().indexOf('beta.destinyitemmanager') < 0 ? atob(atob('TldWak1ERmpZV1kyWVdWbE5EVXdaRGxrWVdKbE5qUTJNamswWm1aa1l6az0=')) : atob("MmIxNmMyOTFmY2ZmNDhjYmFjODZiZDVmMWQwYmJjOWQ=")
 
 class BungieApi {
 

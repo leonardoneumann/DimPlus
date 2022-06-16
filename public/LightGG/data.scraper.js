@@ -4,6 +4,7 @@ const LIGHTGG_ITEMDB_URL = 'https://www.light.gg/db/items/'
 const LIGHTGG_COMMUNITY_AVG_ELEMID = 'community-average'
 const LIGHTGG_MYROLLS_ELEMID = 'my-rolls'
 const LIGHTGG_SOCKETS_ELEMID = 'socket-container'
+const LIGHTGG_CACHELIFE = 24 * 60 * 3 // 3 days
 
 class LightGgDataScraper {
 
@@ -25,7 +26,7 @@ class LightGgDataScraper {
             return false
         }
 
-        return await CacheManager.fetchAny(cacheKey, fetchData)
+        return await CacheManager.fetchAny(cacheKey, fetchData, LIGHTGG_CACHELIFE)
     }
 
 
@@ -48,7 +49,7 @@ class LightGgDataScraper {
             return false
         }
 
-        return await CacheManager.fetchAny(cacheKey, fetchData)
+        return await CacheManager.fetchAny(cacheKey, fetchData, LIGHTGG_CACHELIFE)
 
     }
     
