@@ -56,4 +56,8 @@ class BackgroundService {
         return null;
     }
 
+    static async CloseWindow() {
+        return await this.#sendMessagePromise({ close: true })
+    }
+
 }

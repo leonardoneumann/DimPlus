@@ -5,6 +5,7 @@ const LIGHTGG_COMMUNITY_AVG_ELEMID = 'community-average'
 const LIGHTGG_MYROLLS_ELEMID = 'my-rolls'
 const LIGHTGG_SOCKETS_ELEMID = 'socket-container'
 const LIGHTGG_CACHELIFE = 24 * 60 * 3 // 3 days
+const LIGHTGG_HTML_CACHEKEY_ROOT = '/lightgg-html'
 
 class LightGgDataScraper {
 
@@ -14,19 +15,15 @@ class LightGgDataScraper {
      * @returns {ObjectArray} Community roll data objects array
      */
     static async GetItemAvgRolls(itemId) {
+        const cacheKey = `${LIGHTGG_HTML_CACHEKEY_ROOT}-${itemId}`
 
-        const cacheKey = `/lightgg-avg-roll-${itemId}`
         const fetchData = async () => {
-            let html = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_COMMUNITY_AVG_ELEMID, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
-            if(html) {
-                let rollData = LightGgDataParser.ProcessCommunityAvgRollsItemDbHtml(html)
-                if(rollData)
-                    return rollData
-            }
-            return false
+            return await this.#GetHtmlItemDbData({itemId, anchorId: LIGHTGG_COMMUNITY_AVG_ELEMID})
         }
 
-        return await CacheManager.fetchAny(cacheKey, fetchData, LIGHTGG_CACHELIFE)
+        let html = await CacheManager.fetchAny(cacheKey, fetchData, LIGHTGG_CACHELIFE)
+
+        return html ? LightGgDataParser.ProcessCommunityAvgRollsItemDbHtml(html, `#${LIGHTGG_COMMUNITY_AVG_ELEMID}`) : false
     }
 
 
@@ -36,39 +33,15 @@ class LightGgDataScraper {
      * @returns {ObjectArray} Community roll data objects array
      */
     static async GetExtraInfo(itemId) {
-
-        const cacheKey = `/lightgg-extra-info-${itemId}`
+        const cacheKey = `${LIGHTGG_HTML_CACHEKEY_ROOT}-${itemId}`
 
         const fetchData = async () => {
-            let html = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_SOCKETS_ELEMID })
-            if(html) {
-                let data = LightGgDataParser.ProcessExtraInfoItemDbHtml(html)
-                if(data)
-                    return data
-            }
-            return false
+            return await this.#GetHtmlItemDbData({itemId})
         }
 
-        return await CacheManager.fetchAny(cacheKey, fetchData, LIGHTGG_CACHELIFE)
+        let html = await CacheManager.fetchAny(cacheKey, fetchData, LIGHTGG_CACHELIFE)
 
-    }
-    
-    /**
-     * @deprecated use the API now
-     * @param {any} itemId 
-     * @returns {Array} Community roll data objects array
-     */
-    static async GetAllMyRolls(itemId) {
-
-        let ItemDbHtml = await this.#GetHtmlItemDbData({itemId, elementId: LIGHTGG_MYROLLS_ELEMID, anchorId: LIGHTGG_MYROLLS_ELEMID})
-
-        if(ItemDbHtml) {
-            let rollData = LightGgDataParser.ProcessMyRollsItemDbHtml(ItemDbHtml)
-            if(rollData) {
-                CacheManager.saveDataToCache(cacheKey, rollData)
-            }
-            return rollData
-        }
+        return html ? LightGgDataParser.ProcessExtraInfoItemDbHtml(html, `#${LIGHTGG_SOCKETS_ELEMID}`) : false
     }
 
     /**
@@ -97,6 +70,8 @@ class LightGgDataScraper {
         let openWindowResponse = await BackgroundService.OpenWindowAndExecute(args)
 
         //TODO: could use a try catch , a log and store the result for later use so we dont call the background each time
+
+        //BackgroundService.CloseWindow()
 
         return openWindowResponse
     }

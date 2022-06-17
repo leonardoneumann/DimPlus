@@ -1,15 +1,23 @@
 /* global chrome */
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.tabs.sendMessage(tab.id, { message: 'load' });
-});
+chrome.browserAction.onClicked.addListener(function (tab) {
+    chrome.tabs.sendMessage(tab.id, {
+        message: 'load'
+    })
+})
 
 
-var lastTabId;
-var lastUrl;
+var lastTabId
+var lastUrl
 
 chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+    function (request, sender, sendResponse) {
+
+        if (request.close) {
+            chrome.tabs.remove(lastTabId)
+            lastTabId = lastUrl = null
+            return true
+        }
 
         // Open pop-up handler
         if (request.open_window) {
@@ -17,7 +25,7 @@ chrome.runtime.onMessage.addListener(
             let createPopup = (windowData) => {
                 chrome.windows.create(windowData,
                     async (window) => {
-                        
+
                         if (window) {
                             lastTabId = window.tabs[0].id
                             lastUrl = windowData.url
@@ -28,8 +36,11 @@ chrome.runtime.onMessage.addListener(
                             console.log("can't open popup")
                             if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
                         }
-                        
-                        sendResponse({tabId: lastTabId, windowId: window.id})
+
+                        sendResponse({
+                            tabId: lastTabId,
+                            windowId: window.id
+                        })
                     }
 
                 )
@@ -41,10 +52,14 @@ chrome.runtime.onMessage.addListener(
                         if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
                         createPopup(request.open_window)
                     } else {
-                        if(lastUrl && lastUrl === request.open_window.url) {
-                            sendResponse({ tabId: lastTabId })
+                        if (lastUrl && lastUrl === request.open_window.url) {
+                            sendResponse({
+                                tabId: lastTabId
+                            })
                         } else {
-                            chrome.tabs.update(lastTabId, { url: request.open_window.url }, 
+                            chrome.tabs.update(lastTabId, {
+                                    url: request.open_window.url
+                                },
                                 async (tab) => {
                                     if (!tab) {
                                         createPopup(request.open_window)
@@ -55,17 +70,19 @@ chrome.runtime.onMessage.addListener(
                                         let updateListener = (tabId, info) => {
                                             if (info.status === 'complete') {
                                                 lastUrl = request.open_window.url
-                                                chrome.tabs.onUpdated.removeListener(updateListener);
-                                                sendResponse({ tabId: tab.id })
+                                                chrome.tabs.onUpdated.removeListener(updateListener)
+                                                sendResponse({
+                                                    tabId: tab.id
+                                                })
                                             }
                                         }
 
-                                        chrome.tabs.onUpdated.addListener(updateListener);
+                                        chrome.tabs.onUpdated.addListener(updateListener)
                                     }
                                 }
                             )
                         }
-                        
+
                     }
                 })
             } else {
@@ -77,24 +94,19 @@ chrome.runtime.onMessage.addListener(
         }
 
         //Get community rolls from opened pop up
-        if(request.execute){
-            chrome.tabs.executeScript( request.execute.tabId,
-            {   //details
-                allFrames: true,
-                runAt: 'document_idle',
-                code: `(${request.execute.script})()
-                `,
-            },
+        if (request.execute) {
+            chrome.tabs.executeScript(request.execute.tabId, { //details
+                    allFrames: true,
+                    runAt: 'document_idle',
+                    code: `(${request.execute.script})()`,
+                },
                 async (injectionResults) => {
-                    /*
-                    for (const frameResult of injectionResults) {
-                        console.log('Frame Title: ' + frameResult)   
-                    }
-                    */
-                    sendResponse({ results: injectionResults })
+                    sendResponse({
+                        results: injectionResults
+                    })
                 }
             )
             return true
         }
     }
-);
+)
