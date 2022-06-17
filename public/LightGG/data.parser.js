@@ -7,15 +7,15 @@ class LightGgDataParser {
      * @param {string} html Html string for the 'community-rolls' div element
      * @returns {Array} Object array with roll data, including relative usage percentage and color, column position, img url, name
      */
-    static ProcessCommunityAvgRollsItemDbHtml(html) {
+    static ProcessCommunityAvgRollsItemDbHtml(html, locator) {
 
         if (html != null && html.length) {
-            let rollsHtml = $.parseHTML(html)
+            let rollsHtml = $(html).find(locator).first()
 
             let rollData = []
             let rollIndex = 0
             let column = 0
-            $(rollsHtml).each((colIndex, elem) => {
+            $(rollsHtml).children().each((colIndex, elem) => {
 
                 if(elem instanceof HTMLUListElement){
                     column++;
@@ -69,7 +69,7 @@ class LightGgDataParser {
      * @param {string} html Html string for the 'community-rolls' div element
      * @returns {Array} Object array with items and roll data
      */
-    static ProcessMyRollsItemDbHtml(html) {
+    static ProcessMyRollsItemDbHtml(html, locator) {
 
         if (html != null && html.length) {
             let rollsHtml = $.parseHTML(html)
@@ -118,9 +118,11 @@ class LightGgDataParser {
      * @param {string} html Html string for the 'community-rolls' div element
      * @returns {Array} Object array with roll data, including relative usage percentage and color, column position, img url, name
      */
-    static ProcessExtraInfoItemDbHtml(html) {
+    static ProcessExtraInfoItemDbHtml(html, locator) {
 
         let nodes = $.parseHTML(html)
+
+        nodes = $(nodes).find(locator)
 
         const parseSection = (htmlSection) => {
             let data = []
