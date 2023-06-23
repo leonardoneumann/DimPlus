@@ -14,9 +14,9 @@ class CommunityRolls {
 
         itemRolls = itemRolls.flat()
 
-        const perkGrid = $(document.body).find(".item-popup .item-details-body .sockets").children()[1]
-        let isGrid = $(perkGrid).find("button").children('.fa-list').length
-        let isList = $(perkGrid).find("button").children('.fa-th').length
+        const perkGrid = $(document.body).find(".item-popup .item-details-body > div:eq(4) > div:eq(1)")
+        const isGrid = $(perkGrid).find("button").children('.fa-list').length
+        const isList = $(perkGrid).find("button").children('.fa-th').length
 
         let rollContainers = []
         if (perkGrid) {
