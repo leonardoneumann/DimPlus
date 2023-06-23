@@ -13,11 +13,18 @@ class CommunityRolls {
         if (!rollsData || !itemRolls) return
 
         itemRolls = itemRolls.flat()
+        let perkGrid, isGrid, isList
 
-        const perkGrid = $(document.body).find(".item-popup .item-details-body > div:eq(4) > div:eq(1)")
-        const isGrid = $(perkGrid).find("button").children('.fa-list').length
-        const isList = $(perkGrid).find("button").children('.fa-th').length
-
+        try {
+            perkGrid = $(document.body).find(".item-popup .item-details-body > div:eq(4) > div:eq(1)")
+            isGrid = $(perkGrid).find("button").children('.fa-list').length
+            isList = $(perkGrid).find("button").children('.fa-th').length
+        } 
+        catch(err) {
+            console.error("[DIM+] AppendToItemPopup(): Perk Grid selector query is failing")
+            throw(err)
+        }
+        
         let rollContainers = []
         if (perkGrid) {
 
@@ -29,7 +36,7 @@ class CommunityRolls {
             // if perks are listed as grid , its pretty straightforward
             if (rollContainers.length && isGrid) {
                 rollContainers.forEach((rollElem, index) => {
-                    let roll = itemRolls[index]?.id ? rollsData.find(r => r.perkId == itemRolls[index].id) : false
+                    const roll = itemRolls[index]?.id ? rollsData.find(r => r.perkId == itemRolls[index].id) : false
 
                     if (roll)
                         $(rollElem).append(this.#createRollPercentPlaceElement(roll))
@@ -41,15 +48,15 @@ class CommunityRolls {
 
                 rollContainers.forEach((rollElem, index) => {
 
-                    let imgUrl = $(rollElem).find("image")[0]?.href.baseVal //
-                    let children = $(rollElem).parent().children()
-                    let curPerkName = children[1]?.innerText //Perk Name
+                    const imgUrl = $(rollElem).find("image")[0]?.href.baseVal //
+                    const children = $(rollElem).parent().children()
+                    const curPerkName = children[1]?.innerText //Perk Name
 
                     let guessed = false
                     let roll = rollsData.find(r => r.imgUrl === imgUrl && r.name === curPerkName)
 
                     if (!roll) {
-                        let rolls = rollsData.filter(r => r.imgUrl === imgUrl)
+                        const rolls = rollsData.filter(r => r.imgUrl === imgUrl)
 
                         if (rolls.length > 1) {
                             //this case needs a fix , same icon for different perks is a problem without having the exact item uid
@@ -87,10 +94,10 @@ class CommunityRolls {
         if (compareGridItems) {
             $(compareGridItems).each((itemIndex, itemElem) => {
 
-                let curItemUUID = $(itemElem).attr('id')
+                const curItemUUID = $(itemElem).attr('id')
 
                 //thankful for light.gg descriptive html 
-                let columns = $(itemElem).parentsUntil('.compare-item').parent().find('div.item-socket:not(.hasMenu)')
+                const columns = $(itemElem).parentsUntil('.compare-item').parent().find('div.item-socket:not(.hasMenu)')
 
                 if (columns.length > 0) {
 
@@ -100,11 +107,11 @@ class CommunityRolls {
 
                         $(colElem).find('.socket-container.notIntrinsic').each((rowIndex, rollElem) => {
                             //console.log(`curItemUUID : ${curItemUUID} colIndex : ${colIndex} rowIndex : ${rowIndex}`)
-                            let curRoll = myItemRolls.find(r => r.uuid === curItemUUID)
+                            const curRoll = myItemRolls.find(r => r.uuid === curItemUUID)
                                 .rolls.find(r => r.column === colIndex - 1 && r.row === rowIndex)
 
                             if (curRoll) {
-                                let curRollStats = avgRolls.find(p => p.perkId === curRoll.id.toString())
+                                const curRollStats = avgRolls.find(p => p.perkId === curRoll.id.toString())
 
                                 if (curRollStats) {
                                     $(rollElem).append(this.#createRollPercentPlaceElement(curRollStats))
@@ -118,7 +125,7 @@ class CommunityRolls {
     }
 
     static ClearExtraInfoItemPopup() {
-        let extraInfoContainer = $(document.body).find('#extra-info-container').first()
+        const extraInfoContainer = $(document.body).find('#extra-info-container').first()
 
         if (extraInfoContainer.length) {
             extraInfoContainer.remove()
@@ -136,7 +143,7 @@ class CommunityRolls {
     static AppendExtraInfoToItemPopup(extraInfo, itemRolls) {
 
         let extraInfoContainer = $(document.body).find('.extra-info').first()
-        let createContainer = !(extraInfoContainer.length)
+        const createContainer = !(extraInfoContainer.length)
 
         if (createContainer) {
             extraInfoContainer = $('<div class="extra-info">')
@@ -156,7 +163,7 @@ class CommunityRolls {
                 })
             })
 
-            let hasCombo = foundRolls === info.ids.length
+            const hasCombo = foundRolls === info.ids.length
 
             extraInfoContainer.append(
                 `<div ${hasCombo ? "class='has-combo'" : ''}>
@@ -194,9 +201,9 @@ class CommunityRolls {
         }
 
         if (createContainer) {
-            let container = $(document.body).find('.item-popup').children().first().children().first()
+            const container = $(document.body).find('.item-popup').children().first().children().first()
             //pretty sure there is a better way to do this
-            let popupContainer = $('<div>', {
+            const popupContainer = $('<div>', {
                 class: $(container).children().first().attr('class'),
                 id: 'extra-info-container'
             })
@@ -221,7 +228,7 @@ class CommunityRolls {
         guessed
     }) {
 
-        let elem = `
+        const elem = `
             <div class="avg-percent-container">
                 <div class="avg-percent-place">
                     #${place ?? '??'}${guessed && place ? '?' : ''}
