@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "DIM Plus",
   "description": "Some added features to DIM to make The Guardian's lives easier",
-  "version": "0.8",
+  "version": "0.9",
   "homepage_url": "https://github.com/leonardoneumann/DimPlus",
   "icons": {
     "16": "icon16.png",
