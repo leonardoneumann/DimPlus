@@ -96,19 +96,16 @@ class CommunityRolls {
 
                 const curItemUUID = $(itemElem).attr('id')
 
-                //thankful for light.gg descriptive html 
-                const columns = $(itemElem).parentsUntil('.compare-item').parent().find('div.item-socket:not(.hasMenu)')
+                const columns = $(itemElem).parents().eq(3).find('.item-sockets').eq(0).children()
 
                 if (columns.length > 0) {
 
                     $(columns).each((colIndex, colElem) => {
 
-                        if (colIndex === 0) return //Frame Type
-
-                        $(colElem).find('.socket-container.notIntrinsic').each((rowIndex, rollElem) => {
+                        $(colElem).find('.plug').each((rowIndex, rollElem) => {
                             //console.log(`curItemUUID : ${curItemUUID} colIndex : ${colIndex} rowIndex : ${rowIndex}`)
                             const curRoll = myItemRolls.find(r => r.uuid === curItemUUID)
-                                .rolls.find(r => r.column === colIndex - 1 && r.row === rowIndex)
+                                .rolls.find(r => r.column === colIndex && r.row === rowIndex)
 
                             if (curRoll) {
                                 const curRollStats = avgRolls.find(p => p.perkId === curRoll.id.toString())
@@ -119,6 +116,8 @@ class CommunityRolls {
                             }
                         })
                     })
+                } else {
+                    console.error("[DIM+] AppendToCompare(): Perk Grid selector query is failing")
                 }
             })
         }
