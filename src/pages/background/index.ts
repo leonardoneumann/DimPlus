@@ -1,5 +1,6 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import 'webextension-polyfill';
+import { setSidepanelOptions } from './sidepanelOptions';
 
 reloadOnUpdate('pages/background');
 
@@ -10,3 +11,5 @@ reloadOnUpdate('pages/background');
 reloadOnUpdate('pages/content/style.scss');
 
 console.log('background loaded');
+
+setSidepanelOptions();

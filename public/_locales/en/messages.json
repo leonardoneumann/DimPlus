@@ -1,10 +1,10 @@
 {
   "extensionDescription": {
-    "description": "Extension description",
-    "message": "Chrome extension boilerplate developed with Vite, React and Typescript"
+    "description": "An extension to integrate D2Hivemind backend on DIM",
+    "message": "D2Hivemind DIM Extension (ex DIMPlus)"
   },
   "extensionName": {
-    "description": "Extension name",
-    "message": "Chrome extension boilerplate"
+    "description": "DIM Plus",
+    "message": "DIM Extension for D2Hivemind"
   }
 }
