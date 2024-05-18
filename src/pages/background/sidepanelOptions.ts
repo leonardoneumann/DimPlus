@@ -1,4 +1,4 @@
-import { ORIGIN as DIM_URL_ORIGIN } from '../../shared/Dim/globals';
+import { ORIGIN as DIM_URL_ORIGIN } from '../../shared/dim/globals';
 
 export function setSidepanelOptions() {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(error => console.error(error));
@@ -6,7 +6,7 @@ export function setSidepanelOptions() {
   chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     if (!tab.url) return;
     const url = new URL(tab.url);
-    // Enables the side panel on google.com
+    // Enables the side panel DIM site
     if (url.origin === DIM_URL_ORIGIN) {
       await chrome.sidePanel.setOptions({
         tabId,
