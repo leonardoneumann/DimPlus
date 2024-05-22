@@ -1,7 +1,7 @@
 {
   "name": "dimplus",
   "version": "1.0.0",
-  "description": "chrome extension boilerplate",
+  "description": "Destiny 2 DIM Plus Extension",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   },
   "type": "module",
   "dependencies": {
+    "bungie-api-ts": "^5.1.0",
     "construct-style-sheets-polyfill": "3.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
