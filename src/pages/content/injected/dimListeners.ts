@@ -1,4 +1,4 @@
-import { DIM_EVENT_INVENTORY_READY } from '@src/shared/dim/globals';
+import { DIM_EVENT_INVENTORY_READY } from '@root/src/dim/globals';
 import { onItemClick as onInventoryItemClick } from './dimInventory';
 
 /**

@@ -1,4 +1,4 @@
-import { DIM_URL_ORIGIN } from '../../shared/dim/globals';
+import { DIM_URL_ORIGIN } from '../../dim/globals';
 
 export function setSidepanelOptions() {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(error => console.error(error));

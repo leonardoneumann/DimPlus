@@ -1,3 +1,5 @@
+import { getItemFromIID } from '@root/src/dim/storage/inventory';
+
 const itemDragContainerClassName = 'item-drag-container';
 const itemElementClassName = 'item';
 
@@ -6,17 +8,23 @@ export async function onItemClick(event: MouseEvent) {
     const targetElem: HTMLDivElement = event.target;
 
     const itemElement = getItemChildElement(targetElem);
+    let itemIID: string = null;
 
     if (itemElement) {
-      console.log(`item uuid ${itemElement.id} clicked !`);
+      itemIID = itemElement.id;
     } else {
       const itemContainer = getItemParentElementContainer(targetElem, 2);
 
       if (itemContainer !== null) {
         const itemElement = getItemChildElement(itemContainer);
 
-        console.log(`item uuid ${itemElement.id} clicked !`);
+        itemIID = itemElement.id;
       }
+    }
+
+    if (itemIID !== null) {
+      const item = await getItemFromIID(itemIID);
+      console.log(`Item id is ${item.itemHash}`);
     }
   }
 }
