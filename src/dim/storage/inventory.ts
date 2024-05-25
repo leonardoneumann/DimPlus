@@ -4,9 +4,13 @@ import { get } from '@src/shared/storages/idb-keyval';
 const dimLastMembershipIdKey = 'dim-last-membership-id';
 const dimProfileKey = membershipId => `profile-${membershipId}`;
 
-export async function getCurrentProfileInventory(): Promise<DestinyItemComponent[]> {
+async function getCurrentUserProfile(): Promise<DestinyProfileResponse> {
   const membershipId = window.localStorage.getItem(dimLastMembershipIdKey);
-  const profile = await get<DestinyProfileResponse>(dimProfileKey(membershipId));
+  return await get<DestinyProfileResponse>(dimProfileKey(membershipId));
+}
+
+export async function getFullInventoryFlat(): Promise<DestinyItemComponent[]> {
+  const profile = await getCurrentUserProfile();
 
   return [
     ...Object.values(profile.characterEquipment.data)
@@ -15,17 +19,32 @@ export async function getCurrentProfileInventory(): Promise<DestinyItemComponent
     ...Object.values(profile.characterInventories.data)
       .map(inventory => inventory.items)
       .flat(),
+    ...profile.profileInventory.data.items,
   ];
 }
 
-export async function getItemFromIID(iid: string): Promise<DestinyItemComponent> {
-  const inventory = await getCurrentProfileInventory();
+export async function getItemByIID(iid: string): Promise<DestinyItemComponent> {
+  const profile = await getCurrentUserProfile();
 
-  const foundItems = inventory.filter(it => it.itemInstanceId === iid);
+  for (const characterKey in profile.characterInventories.data) {
+    for (const item of profile.characterInventories.data[characterKey].items) {
+      if (item.itemInstanceId === iid) {
+        return item;
+      }
+    }
 
-  if (foundItems.length !== 1) {
-    console.error('[Dim+] found 0 or more than 1 item for a given IID');
-  } else {
-    return foundItems[0];
+    for (const item of profile.characterEquipment.data[characterKey].items) {
+      if (item.itemInstanceId === iid) {
+        return item;
+      }
+    }
   }
+
+  for (const item of profile.profileInventory.data.items) {
+    if (item.itemInstanceId === iid) {
+      return item;
+    }
+  }
+
+  return null;
 }
