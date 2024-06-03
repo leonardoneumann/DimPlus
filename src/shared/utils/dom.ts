@@ -4,21 +4,21 @@ export function findParentElementByClassName(
   topLevels: number,
 ): HTMLDivElement {
   if (targetElement.classList[0] === className) {
-    return targetElement;
+    return targetElement
   } else if (targetElement.parentElement instanceof HTMLDivElement && topLevels > 0) {
-    topLevels--;
-    return findParentElementByClassName(className, targetElement.parentElement, topLevels);
+    topLevels--
+    return findParentElementByClassName(className, targetElement.parentElement, topLevels)
   }
-  return null;
+  return null
 }
 
 export function findChildElementByClassName(className: string, targetElement: HTMLDivElement): HTMLDivElement {
   if (targetElement.classList[0] === className) {
-    return targetElement;
+    return targetElement
   } else {
     for (const elementItem of targetElement.children) {
       if (elementItem instanceof HTMLDivElement && elementItem.classList[0] === className) {
-        return elementItem as HTMLDivElement;
+        return elementItem as HTMLDivElement
       }
     }
   }
