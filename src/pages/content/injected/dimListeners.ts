@@ -1,6 +1,6 @@
-import { DIM_EVENT_INVENTORY_READY } from '@root/src/dim/globals';
-import { onItemClick as onInventoryItemClick } from './dimInventory';
-import { setConnection } from './connection';
+import { DIM_EVENT_INVENTORY_READY } from '@root/src/dim/globals'
+import { onItemClick as onInventoryItemClick } from './dimInventory'
+import { setConnection } from './connection'
 
 /**
  * Sets a callback to be called when inventory is available
@@ -9,12 +9,12 @@ import { setConnection } from './connection';
 function SetInventoryReadyListener(callback) {
   SetDocumentObserver((_, quit) => {
     if (document.getElementsByClassName('item')[0]) {
-      window.dispatchEvent(new Event(DIM_EVENT_INVENTORY_READY));
-      quit.disconnect();
+      window.dispatchEvent(new Event(DIM_EVENT_INVENTORY_READY))
+      quit.disconnect()
     }
-  });
+  })
 
-  window.addEventListener(DIM_EVENT_INVENTORY_READY, callback, { once: true });
+  window.addEventListener(DIM_EVENT_INVENTORY_READY, callback, { once: true })
 }
 
 /**
@@ -22,18 +22,18 @@ function SetInventoryReadyListener(callback) {
  * @param {Function} mutationCallback
  */
 function SetDocumentObserver(mutationCallback) {
-  const observer = new MutationObserver(mutationCallback);
+  const observer = new MutationObserver(mutationCallback)
   observer.observe(document, {
     childList: true,
     subtree: true,
-  });
+  })
 }
 
 async function setDimListeners() {
   SetInventoryReadyListener(() => {
-    document.getElementById('app').addEventListener('click', onInventoryItemClick);
-  });
+    document.getElementById('app').addEventListener('click', onInventoryItemClick)
+  })
 }
 
-setDimListeners();
-setConnection();
+setDimListeners()
+setConnection()

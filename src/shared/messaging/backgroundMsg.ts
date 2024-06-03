@@ -1,4 +1,4 @@
-export const backgroundPortName = 'dimplus-background-connection-port';
+export const BackgroundPortName = 'dimplus-background-connection-port'
 
 export enum BackgroundMsgNames {
   CreateWindow = 'BackgroundMsgCreateWindow',
@@ -6,16 +6,15 @@ export enum BackgroundMsgNames {
 }
 
 export interface BackgroundMsgBase {
-  name: BackgroundMsgNames;
+  name: BackgroundMsgNames
 }
 
 export interface BackgroundMsgCreateWindow extends BackgroundMsgBase {
-  url: string;
-  returnTabId?: number;
+  url: string
+  returnTabId?: number
 }
 
 export interface BackgroundMsgGetWindowContent extends BackgroundMsgBase {
-  tabId: number;
-  elementName: string;
-  returnContent?: string;
+  elementName: string
+  returnContent?: string
 }

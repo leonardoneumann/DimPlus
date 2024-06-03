@@ -1,15 +1,15 @@
-import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
-import 'webextension-polyfill';
-import { setSidepanelOptions } from './sidepanelOptions';
-import { setConnectionListener } from './connectionListener';
+import reloadOnUpdate from 'virtual:reload-on-update-in-background-script'
+import 'webextension-polyfill'
+import { setSidepanelOptions } from './sidepanelOptions'
+import { setConnectionListener } from './connectionListener'
 
-reloadOnUpdate('pages/background');
+reloadOnUpdate('pages/background')
 
 /**
  * Extension reloading is necessary because the browser automatically caches the css.
  * If you do not use the css of the content script, please delete it.
  */
-reloadOnUpdate('pages/content/style.scss');
+reloadOnUpdate('pages/content/style.scss')
 
-setSidepanelOptions();
-setConnectionListener();
+setSidepanelOptions()
+setConnectionListener()
