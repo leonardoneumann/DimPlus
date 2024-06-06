@@ -1,7 +1,7 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script'
 import 'webextension-polyfill'
 import { setSidepanelOptions } from './sidepanelOptions'
-import { setConnectionListener } from './connectionListener'
+import { setEventMessageListener } from './eventMessagesListener'
 
 reloadOnUpdate('pages/background')
 
@@ -12,4 +12,4 @@ reloadOnUpdate('pages/background')
 reloadOnUpdate('pages/content/style.scss')
 
 setSidepanelOptions()
-setConnectionListener()
+setEventMessageListener()

@@ -1,5 +1,5 @@
-import fs from 'node:fs';
-const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+import fs from 'node:fs'
+const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 
 /**
  * After changing, please reload the extension at `chrome://extensions`
@@ -15,7 +15,8 @@ const manifest = {
   name: '__MSG_extensionName__',
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  permissions: ['storage', 'sidePanel', 'tabs'],
+  permissions: ['storage', 'sidePanel', 'tabs', 'scripting'],
+  host_permissions: ['https://www.light.gg/*'],
   background: {
     service_worker: 'src/pages/background/index.js',
     type: 'module',
@@ -43,9 +44,9 @@ const manifest = {
   web_accessible_resources: [
     {
       resources: ['assets/js/*.js', 'assets/css/*.css', 'icon-128.png', 'icon-48.png', 'icon-16.png'],
-      matches: ['https://app.destinyitemmanager.com/*'],
+      matches: ['https://app.destinyitemmanager.com/*', 'https://www.light.gg/*'],
     },
   ],
-};
+}
 
-export default manifest;
+export default manifest

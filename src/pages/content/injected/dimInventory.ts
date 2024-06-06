@@ -1,7 +1,6 @@
 import { getItemByIID } from '@root/src/dim/storage/inventory'
 import { findParentElementByClassName, findChildElementByClassName } from '@src/shared/utils/dom'
-import { sendCreateWindow, sendGetWindowContents } from './connection'
-import { LIGHTGG_COMMUNITY_AVG_ELEMID, LightGGItemUrl } from '../scrapers/lightgg'
+import { sendInventoryItemClickEventMessage } from './eventMessagesSender'
 
 const itemDragContainerClassName = 'item-drag-container'
 const itemElementClassName = 'item'
@@ -32,11 +31,8 @@ export async function onItemClick(event: MouseEvent) {
       if (item !== null) {
         console.log(`Item id is ${item.itemHash}`)
 
-        const tabId = await sendCreateWindow(LightGGItemUrl(item.itemHash))
-        console.log(`tabId recieved from background ${tabId}`)
-
-        const content = await sendGetWindowContents(tabId, LIGHTGG_COMMUNITY_AVG_ELEMID)
-        console.log(content)
+        const html = await sendInventoryItemClickEventMessage(item.itemHash)
+        console.log(html)
       }
     }
   }

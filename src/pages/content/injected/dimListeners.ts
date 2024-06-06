@@ -1,6 +1,5 @@
 import { DIM_EVENT_INVENTORY_READY } from '@root/src/dim/globals'
 import { onItemClick as onInventoryItemClick } from './dimInventory'
-import { setConnection } from './connection'
 
 /**
  * Sets a callback to be called when inventory is available
@@ -36,4 +35,3 @@ async function setDimListeners() {
 }
 
 setDimListeners()
-setConnection()
