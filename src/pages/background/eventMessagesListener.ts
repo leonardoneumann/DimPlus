@@ -1,6 +1,6 @@
 import { MsgBase, MsgEventInventoryItemClick, MsgNames } from '@root/src/shared/messaging/eventMessages'
+import { LIGHTGG_COMMUNITYAVG_SELECTOR, LightGGItemUrl } from '../../scrapers/lightgg'
 import { getOrCreateWindow, getWindowContent } from './window'
-import { LightGGItemUrl, LIGHTGG_COMMUNITYAVG_SELECTOR } from './scrapers/lightgg'
 
 export function setEventMessageListener() {
   chrome.runtime.onMessage.addListener((msg: MsgBase, sender, sendResponse) => {
@@ -18,6 +18,5 @@ export function setEventMessageListener() {
 
 async function onRecievedInventoryItemClick(msg: MsgEventInventoryItemClick): Promise<string> {
   await getOrCreateWindow(LightGGItemUrl(msg.itemHash))
-  const ret = await getWindowContent(LIGHTGG_COMMUNITYAVG_SELECTOR)
-  return ret
+  return await getWindowContent(LIGHTGG_COMMUNITYAVG_SELECTOR)
 }

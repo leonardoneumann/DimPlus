@@ -1,6 +1,7 @@
 import { getItemByIID } from '@root/src/dim/storage/inventory'
 import { findParentElementByClassName, findChildElementByClassName } from '@src/shared/utils/dom'
 import { sendInventoryItemClickEventMessage } from './eventMessagesSender'
+import { parseCommunityAvgRolls } from '../../../scrapers/lightgg'
 
 const itemDragContainerClassName = 'item-drag-container'
 const itemElementClassName = 'item'
@@ -32,7 +33,7 @@ export async function onItemClick(event: MouseEvent) {
         console.log(`Item id is ${item.itemHash}`)
 
         const html = await sendInventoryItemClickEventMessage(item.itemHash)
-        console.log(html)
+        console.log(parseCommunityAvgRolls(html))
       }
     }
   }

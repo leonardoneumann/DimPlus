@@ -1,5 +1,3 @@
-export const BackgroundPortName = 'dimplus-background-connection-port'
-
 export enum MsgNames {
   InventoryItemClick = 'BackgroundMsgInventoryItemClick',
 }

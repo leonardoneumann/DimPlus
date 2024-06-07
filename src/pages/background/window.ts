@@ -20,7 +20,7 @@ export async function getOrCreateWindow(url: string): Promise<number> {
   return activeWindowTab.id
 }
 
-export async function getWindowContent(selector: string) {
+export async function getWindowContent(selector: string): Promise<string> {
   return await executeScriptGetElement(activeWindowTab.id, selector)
 }
 
@@ -64,7 +64,7 @@ async function executeScriptGetElement(tabId: number, selector: string): Promise
     args: [selector],
   })
 
-  if (results && results.length > 0) {
+  if (results && results[0] && results[0].result) {
     return results[0].result
   } else {
     console.error(`[Dim+ Background] error executing GetElement on tab ${tabId}`)
