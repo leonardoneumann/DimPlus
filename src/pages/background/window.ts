@@ -1,27 +1,23 @@
-let activeWindowTab: chrome.tabs.Tab = null
-
 export const popupWindowDefaultParams: chrome.windows.CreateData = { type: 'popup', state: 'minimized' }
 
-export async function getOrCreateWindow(url: string): Promise<number> {
-  if (!activeWindowTab || !activeWindowTab.id) {
-    activeWindowTab = await createWindow(url)
+export async function getOrCreateWindow(url: string, tabId?: number): Promise<number> {
+  if (!tabId) {
+    return (await createWindow(url)).id
   } else {
-    const tab = await chrome.tabs.get(activeWindowTab.id)
+    const tab = await chrome.tabs.get(tabId)
     if (tab) {
       if (tab.url !== url) {
         const updatedTab = await updateWindow(url, tab.id)
         return updatedTab.id
       }
     } else {
-      activeWindowTab = await createWindow(url)
+      return (await createWindow(url)).id
     }
   }
-
-  return activeWindowTab.id
 }
 
-export async function getWindowContent(selector: string): Promise<string> {
-  return await executeScriptGetElement(activeWindowTab.id, selector)
+export async function getWindowContent(tabId: number, selector: string): Promise<string> {
+  return await executeScriptGetElement(tabId, selector)
 }
 
 // return tabId for the newly created window

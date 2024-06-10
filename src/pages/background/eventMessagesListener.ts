@@ -1,6 +1,7 @@
 import { MsgBase, MsgEventInventoryItemClick, MsgNames } from '@root/src/shared/messaging/eventMessages'
-import { LIGHTGG_COMMUNITYAVG_SELECTOR, LightGGItemUrl } from '../../scrapers/lightgg'
+import { LIGHTGG_MAIN_COLUMN_SELECTOR, LightGGItemUrl } from '../../scrapers/lightgg'
 import { getOrCreateWindow, getWindowContent } from './window'
+import { fetchAny as cacheFetchAny } from '@root/src/shared/utils/cache'
 
 export function setEventMessageListener() {
   chrome.runtime.onMessage.addListener((msg: MsgBase, sender, sendResponse) => {
@@ -16,7 +17,16 @@ export function setEventMessageListener() {
   })
 }
 
-async function onRecievedInventoryItemClick(msg: MsgEventInventoryItemClick): Promise<string> {
-  await getOrCreateWindow(LightGGItemUrl(msg.itemHash))
-  return await getWindowContent(LIGHTGG_COMMUNITYAVG_SELECTOR)
+//shouldnt use the same model for request AND response, but its easier to maintain state this way for now.
+async function onRecievedInventoryItemClick(msg: MsgEventInventoryItemClick): Promise<MsgEventInventoryItemClick> {
+  const url = LightGGItemUrl(msg.itemHash)
+  msg.responseTabId = await getOrCreateWindow(url, msg.tabId)
+  const cacheResponse = await cacheFetchAny(
+    url,
+    async () => await getWindowContent(msg.responseTabId, LIGHTGG_MAIN_COLUMN_SELECTOR),
+  )
+
+  if (cacheResponse) msg.responseTabContent = cacheResponse
+
+  return msg
 }

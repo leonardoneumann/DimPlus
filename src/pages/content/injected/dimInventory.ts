@@ -1,11 +1,13 @@
 import { getItemByIID } from '@root/src/dim/storage/inventory'
 import { findParentElementByClassName, findChildElementByClassName } from '@src/shared/utils/dom'
 import { sendInventoryItemClickEventMessage } from './eventMessagesSender'
-import { parseCommunityAvgRolls } from '../../../scrapers/lightgg'
+import { parseCommunityAvgRolls, parseCommunityRollCombos } from '../../../scrapers/lightgg'
 
 const itemDragContainerClassName = 'item-drag-container'
 const itemElementClassName = 'item'
 const parentElementDeepLevel = 2
+
+let activeOpenedTabId: number = null
 
 export async function onItemClick(event: MouseEvent) {
   if (event.target instanceof HTMLDivElement) {
@@ -32,8 +34,12 @@ export async function onItemClick(event: MouseEvent) {
       if (item !== null) {
         console.log(`Item id is ${item.itemHash}`)
 
-        const html = await sendInventoryItemClickEventMessage(item.itemHash)
-        console.log(parseCommunityAvgRolls(html))
+        const response = await sendInventoryItemClickEventMessage(item.itemHash, activeOpenedTabId)
+
+        activeOpenedTabId = response.responseTabId
+
+        console.log(parseCommunityAvgRolls(response.responseTabContent))
+        console.log(parseCommunityRollCombos(response.responseTabContent))
       }
     }
   }

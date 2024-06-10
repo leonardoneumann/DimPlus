@@ -1,12 +1,11 @@
 const LIGHTGG_ITEMDB_URL = 'https://www.light.gg/db/items/'
 
-export const LIGHTGG_COMMUNITYAVG_SELECTOR = '#community-average'
-//const LIGHTGG_MYROLLS_ELEMID = 'my-rolls'
-//const LIGHTGG_SOCKETS_ELEMID = 'socket-container'
+export const LIGHTGG_MAIN_COLUMN_SELECTOR = '#main-column'
+const LIGHTGG_COMMUNITYAVG_SELECTOR = '#community-average'
 
 export const LightGGItemUrl = (itemHash: number) => `${LIGHTGG_ITEMDB_URL}${itemHash}${LIGHTGG_COMMUNITYAVG_SELECTOR}`
 
-interface RollData {
+export interface RollData {
   percent?: string
   column: number
   place: number
@@ -69,4 +68,66 @@ export function parseCommunityAvgRolls(html: string): Array<RollData> {
   }
 
   return rollData
+}
+
+export interface RollComboItem {
+  ids: string[]
+  imgs: string[]
+  names: string[]
+  percentText: string | undefined
+}
+
+export interface RollCombos {
+  combos: RollComboItem[]
+  masterwork: RollComboItem[]
+  mod: RollComboItem[]
+}
+
+export function parseCommunityRollCombos(html: string): RollCombos {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, 'text/html')
+
+  const parseSection = (htmlSection: Element): RollComboItem[] => {
+    const data: RollComboItem[] = []
+
+    for (const groupElem of htmlSection.children) {
+      const idsElems = groupElem.querySelectorAll('.item')
+      const namesElems = groupElem.querySelectorAll('.perk-names')
+      const percentElem = groupElem.querySelector('.combo-percent')?.textContent?.trim()
+      const ids: string[] = []
+      const imgs: string[] = []
+      const names: string[] = []
+
+      idsElems.forEach(elem => {
+        ids.push(elem.getAttribute('data-id') || '')
+        const imgElem = elem.querySelector('img')
+        imgs.push(imgElem?.getAttribute('src') || '')
+      })
+
+      namesElems.forEach(elem => {
+        names.push(elem.textContent?.replace('+', '').trim() || '')
+      })
+
+      data.push({
+        ids,
+        imgs,
+        names,
+        percentText: percentElem,
+      })
+    }
+
+    return data
+  }
+
+  const combos = parseSection(doc.querySelector('#trait-combos'))
+  const masterwork = parseSection(doc.querySelector('#masterwork-stats'))
+  const mod = parseSection(doc.querySelector('#mod-stats'))
+
+  const retCombos: RollCombos = {
+    combos,
+    masterwork,
+    mod,
+  }
+
+  return retCombos
 }

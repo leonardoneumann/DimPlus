@@ -8,4 +8,7 @@ export interface MsgBase {
 
 export interface MsgEventInventoryItemClick extends MsgBase {
   itemHash: number
+  tabId?: number
+  responseTabId?: number
+  responseTabContent?: string
 }
