@@ -22,7 +22,7 @@ const manifest = {
     type: 'module',
   },
   action: {
-    default_popup: 'src/pages/popup/index.html',
+    //default_popup: 'src/pages/popup/index.html',
     default_icon: 'icon-48.png',
   },
   icons: {
@@ -30,7 +30,6 @@ const manifest = {
   },
   content_scripts: [
     {
-      //matches: ['http://*/*', 'https://*/*', '<all_urls>'],
       matches: ['https://app.destinyitemmanager.com/*'],
       js: ['src/pages/contentInjected/index.js'],
       // KEY for cache invalidation

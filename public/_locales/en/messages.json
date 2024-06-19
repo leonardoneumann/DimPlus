@@ -1,10 +1,10 @@
 {
   "extensionDescription": {
-    "description": "An extension to integrate D2Hivemind backend on DIM",
-    "message": "D2Hivemind DIM Extension (ex DIMPlus)"
+    "description": "An extension to integrate more data into DIM",
+    "message": "DIM Plus"
   },
   "extensionName": {
     "description": "DIM Plus",
-    "message": "DIM Extension for D2Hivemind"
+    "message": "DIM Plus"
   }
 }

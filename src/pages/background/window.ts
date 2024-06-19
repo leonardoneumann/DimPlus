@@ -4,13 +4,13 @@ export async function getOrCreateWindow(url: string, tabId?: number): Promise<nu
   if (!tabId) {
     return (await createWindow(url)).id
   } else {
-    const tab = await chrome.tabs.get(tabId)
-    if (tab) {
+    try {
+      const tab = await chrome.tabs.get(tabId)
       if (tab.url !== url) {
         const updatedTab = await updateWindow(url, tab.id)
         return updatedTab.id
       }
-    } else {
+    } catch {
       return (await createWindow(url)).id
     }
   }
@@ -51,6 +51,14 @@ async function updateWindow(url: string, tabId: number): Promise<chrome.tabs.Tab
     }
     chrome.tabs.onUpdated.addListener(updateListener)
   })
+}
+
+export async function closeWindow(tabId: number) {
+  try {
+    await chrome.tabs.remove(tabId)
+  } catch {
+    console.log('[Dim+ Background] tab already closed')
+  }
 }
 
 async function executeScriptGetElement(tabId: number, selector: string): Promise<string> {

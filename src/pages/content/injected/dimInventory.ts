@@ -1,6 +1,6 @@
 import { getItemByIID } from '@root/src/dim/storage/inventory'
 import { findParentElementByClassName, findChildElementByClassName } from '@src/shared/utils/dom'
-import { sendInventoryItemClickEventMessage } from './eventMessagesSender'
+import { sendItemClickToBackground, sendItemClickToSidepanel } from './eventMessagesSender'
 import { parseCommunityAvgRolls, parseCommunityRollCombos } from '../../../scrapers/lightgg'
 
 const itemDragContainerClassName = 'item-drag-container'
@@ -8,6 +8,7 @@ const itemElementClassName = 'item'
 const parentElementDeepLevel = 2
 
 let activeOpenedTabId: number = null
+let lastItemIID: string = null
 
 export async function onItemClick(event: MouseEvent) {
   if (event.target instanceof HTMLDivElement) {
@@ -28,18 +29,21 @@ export async function onItemClick(event: MouseEvent) {
       }
     }
 
-    if (itemIID !== null) {
+    if (itemIID !== null && lastItemIID !== itemIID) {
+      lastItemIID = itemIID
       const item = await getItemByIID(itemIID)
 
       if (item !== null) {
         console.log(`Item id is ${item.itemHash}`)
 
-        const response = await sendInventoryItemClickEventMessage(item.itemHash, activeOpenedTabId)
+        const response = await sendItemClickToBackground(item.itemHash, activeOpenedTabId)
 
-        activeOpenedTabId = response.responseTabId
-
-        console.log(parseCommunityAvgRolls(response.responseTabContent))
-        console.log(parseCommunityRollCombos(response.responseTabContent))
+        if (response) {
+          activeOpenedTabId = response.responseTabId
+          const avgRolls = parseCommunityAvgRolls(response.responseTabContent)
+          const avgCombos = parseCommunityRollCombos(response.responseTabContent)
+          sendItemClickToSidepanel(item.itemHash, item.itemInstanceId, avgRolls, avgCombos)
+        }
       }
     }
   }
