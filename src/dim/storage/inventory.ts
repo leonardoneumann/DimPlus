@@ -1,16 +1,16 @@
-import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { get } from '@src/shared/storages/idb-keyval';
+import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2'
+import { get } from '@src/shared/storages/idb-keyval'
 
-const dimLastMembershipIdKey = 'dim-last-membership-id';
-const dimProfileKey = membershipId => `profile-${membershipId}`;
+const dimLastMembershipIdKey = 'dim-last-membership-id'
+const dimProfileKey = membershipId => `profile-${membershipId}`
 
 async function getCurrentUserProfile(): Promise<DestinyProfileResponse> {
-  const membershipId = window.localStorage.getItem(dimLastMembershipIdKey);
-  return await get<DestinyProfileResponse>(dimProfileKey(membershipId));
+  const membershipId = window.localStorage.getItem(dimLastMembershipIdKey)
+  return await get<DestinyProfileResponse>(dimProfileKey(membershipId))
 }
 
 export async function getFullInventoryFlat(): Promise<DestinyItemComponent[]> {
-  const profile = await getCurrentUserProfile();
+  const profile = await getCurrentUserProfile()
 
   return [
     ...Object.values(profile.characterEquipment.data)
@@ -20,31 +20,38 @@ export async function getFullInventoryFlat(): Promise<DestinyItemComponent[]> {
       .map(inventory => inventory.items)
       .flat(),
     ...profile.profileInventory.data.items,
-  ];
+  ]
 }
 
-export async function getItemByIID(iid: string): Promise<DestinyItemComponent> {
-  const profile = await getCurrentUserProfile();
+export async function searchItemComponetByIID(iid: string): Promise<DestinyItemComponent> {
+  const profile = await getCurrentUserProfile()
 
   for (const characterKey in profile.characterInventories.data) {
     for (const item of profile.characterInventories.data[characterKey].items) {
       if (item.itemInstanceId === iid) {
-        return item;
+        return item
       }
     }
 
     for (const item of profile.characterEquipment.data[characterKey].items) {
       if (item.itemInstanceId === iid) {
-        return item;
+        return item
       }
     }
   }
 
   for (const item of profile.profileInventory.data.items) {
     if (item.itemInstanceId === iid) {
-      return item;
+      return item
     }
   }
 
-  return null;
+  profile.itemComponents.instances.data?.[iid]
+
+  return null
+}
+
+export async function getItemInstanceComponentByIID(iid: string) {
+  const profile = await getCurrentUserProfile()
+  return profile.itemComponents.instances.data?.[iid]
 }

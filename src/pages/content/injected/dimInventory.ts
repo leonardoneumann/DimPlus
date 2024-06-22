@@ -1,7 +1,8 @@
-import { getItemByIID } from '@root/src/dim/storage/inventory'
+import { searchItemComponetByIID } from '@root/src/dim/storage/inventory'
 import { findParentElementByClassName, findChildElementByClassName } from '@src/shared/utils/dom'
 import { sendItemClickToBackground, sendItemClickToSidepanel } from './eventMessagesSender'
 import { parseCommunityAvgRolls, parseCommunityRollCombos } from '../../../scrapers/lightgg'
+import { createItemInfo } from '@root/src/shared/d2items/itemInfo'
 
 const itemDragContainerClassName = 'item-drag-container'
 const itemElementClassName = 'item'
@@ -31,7 +32,7 @@ export async function onItemClick(event: MouseEvent) {
 
     if (itemIID !== null && lastItemIID !== itemIID) {
       lastItemIID = itemIID
-      const item = await getItemByIID(itemIID)
+      const item = await searchItemComponetByIID(itemIID)
 
       if (item !== null) {
         console.log(`Item id is ${item.itemHash}`)
@@ -42,7 +43,11 @@ export async function onItemClick(event: MouseEvent) {
           activeOpenedTabId = response.responseTabId
           const avgRolls = parseCommunityAvgRolls(response.responseTabContent)
           const avgCombos = parseCommunityRollCombos(response.responseTabContent)
-          sendItemClickToSidepanel(item.itemHash, item.itemInstanceId, avgRolls, avgCombos)
+
+          //should probably split the item definition info and scrapped usage data into two different entities
+          const info = await createItemInfo(item, avgRolls, avgCombos)
+
+          sendItemClickToSidepanel(info)
         }
       }
     }

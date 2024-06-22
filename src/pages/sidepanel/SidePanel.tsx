@@ -7,8 +7,10 @@ import withErrorBoundary from '@src/shared/hoc/withErrorBoundary'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { MsgAddItemInfoToSidepanel, MsgNames } from '@root/src/shared/messaging/eventMessages'
+import SidePanelList from './components/SidePanelList'
+import { ConfigProvider, theme } from 'antd'
 
-const SidePanel = () => {
+const SidePanel: React.FC = () => {
   const [items, setItems] = useState([])
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const SidePanel = () => {
       if (msg.name !== MsgNames.AddItemInfoToSidepanel) return false
       console.log(`[DIM+ Sidepanel] recieved message ${msg.name} from ${sender.tab}`)
       // Add the item to the list
-      setItems(prevItems => [msg.itemIID, ...prevItems])
+      setItems(prevItems => [msg.itemInfo, ...prevItems])
       return false
     }
 
@@ -30,14 +32,18 @@ const SidePanel = () => {
   }, []) // Empty dependency array ensures the effect runs only once
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Community usage data from light.gg</p>
-      </header>
-      <div>
-        <p>{items[0]}</p>
+    <ConfigProvider
+      theme={{
+        // 1. Use dark algorithm
+        algorithm: theme.darkAlgorithm,
+
+        // 2. Combine dark algorithm and compact algorithm
+        // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+      }}>
+      <div className="App">
+        <SidePanelList items={items} />
       </div>
-    </div>
+    </ConfigProvider>
   )
 }
 

@@ -1,4 +1,4 @@
-import { RollCombos, RollData } from '@root/src/scrapers/lightgg'
+import { ItemInfo } from '@root/src/shared/d2items/itemInfo'
 import { MsgAddItemInfoToSidepanel, MsgInventoryItemClick, MsgNames } from '@root/src/shared/messaging/eventMessages'
 import { fetchAny as cacheFetchAny } from '@root/src/shared/utils/cache'
 
@@ -14,12 +14,7 @@ export async function sendItemClickToBackground(
   )
 }
 
-export async function sendItemClickToSidepanel(
-  itemHash: number,
-  itemIID: string,
-  rollsCommunityAvg: RollData[],
-  rollCombos: RollCombos,
-) {
-  const msg = new MsgAddItemInfoToSidepanel(itemHash, itemIID, rollsCommunityAvg, rollCombos)
+export async function sendItemClickToSidepanel(itemInfo: ItemInfo) {
+  const msg = new MsgAddItemInfoToSidepanel(itemInfo)
   await chrome.runtime.sendMessage(msg)
 }

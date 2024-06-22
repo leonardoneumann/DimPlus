@@ -1,13 +1,12 @@
+
 .App {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  text-align: center;
   height: 100%;
   padding: 10px;
-  background-color: #282c34;
 }
 
 .App-header {
@@ -17,6 +16,4 @@
   align-items: top;
   justify-content: left;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
-

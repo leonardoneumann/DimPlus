@@ -79,8 +79,8 @@ export interface RollComboItem {
 
 export interface RollCombos {
   combos: RollComboItem[]
-  masterwork: RollComboItem[]
-  mod: RollComboItem[]
+  masterwork?: RollComboItem[]
+  mods?: RollComboItem[]
 }
 
 export function parseCommunityRollCombos(html: string): RollCombos {
@@ -120,13 +120,17 @@ export function parseCommunityRollCombos(html: string): RollCombos {
   }
 
   const combos = parseSection(doc.querySelector('#trait-combos'))
-  const masterwork = parseSection(doc.querySelector('#masterwork-stats'))
-  const mod = parseSection(doc.querySelector('#mod-stats'))
+
+  const masterworkHtml = doc.querySelector('#masterwork-stats')
+  const masterwork = masterworkHtml ? parseSection(masterworkHtml) : null
+
+  const modsHtml = doc.querySelector('#mod-stats')
+  const mods = modsHtml ? parseSection(modsHtml) : null
 
   const retCombos: RollCombos = {
     combos,
     masterwork,
-    mod,
+    mods: mods,
   }
 
   return retCombos

@@ -1,4 +1,4 @@
-import { RollCombos, RollData } from '@root/src/scrapers/lightgg'
+import { ItemInfo } from '../d2items/itemInfo'
 
 export enum MsgNames {
   InventoryItemClick = 'MsgInventoryItemClick',
@@ -24,17 +24,11 @@ export class MsgInventoryItemClick extends MsgBase {
 }
 
 export class MsgAddItemInfoToSidepanel extends MsgBase {
-  itemHash: number
-  itemIID: string
-  rollsCommunityAvg: RollData[]
-  rollCombos: RollCombos
+  itemInfo: ItemInfo
 
-  constructor(itemHash: number, itemUUID: string, rollsCommunityAvg: RollData[], rollCombos: RollCombos) {
+  constructor(itemInfo: ItemInfo) {
     super()
     this.name = MsgNames.AddItemInfoToSidepanel
-    this.itemHash = itemHash
-    this.itemIID = itemUUID
-    this.rollsCommunityAvg = rollsCommunityAvg
-    this.rollCombos = rollCombos
+    this.itemInfo = itemInfo
   }
 }
