@@ -1,4 +1,4 @@
-import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2'
+import { DestinyItemComponent, DestinyItemComponentSetOfint64, DestinyProfileResponse } from 'bungie-api-ts/destiny2'
 import { get } from '@src/shared/storages/idb-keyval'
 
 const dimLastMembershipIdKey = 'dim-last-membership-id'
@@ -51,7 +51,8 @@ export async function searchItemComponetByIID(iid: string): Promise<DestinyItemC
   return null
 }
 
-export async function getItemInstanceComponentByIID(iid: string) {
+export async function getProfileItemComponents(): Promise<DestinyItemComponentSetOfint64> {
   const profile = await getCurrentUserProfile()
-  return profile.itemComponents.instances.data?.[iid]
+
+  return profile.itemComponents
 }

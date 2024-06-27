@@ -5,12 +5,12 @@ const LIGHTGG_COMMUNITYAVG_SELECTOR = '#community-average'
 
 export const LightGGItemUrl = (itemHash: number) => `${LIGHTGG_ITEMDB_URL}${itemHash}${LIGHTGG_COMMUNITYAVG_SELECTOR}`
 
-export interface RollData {
+export interface PlugMetaUsageData {
   percent?: string
   column: number
   place: number
   color?: string
-  perkId?: string
+  perkId?: number
   imgUrl?: string
   name?: string
 }
@@ -18,10 +18,10 @@ export interface RollData {
 /**
  * Parses the HTML data for community average rolls
  * @param {string} htmldata Html string for the 'community-rolls' div element
- * @returns {Array<RollData>}
+ * @returns {Array<PlugMetaUsageData>}
  */
-export function parseCommunityAvgRolls(html: string): Array<RollData> {
-  const rollData: Array<RollData> = []
+export function parseCommunityAvgRolls(html: string): Array<PlugMetaUsageData> {
+  const rollData: Array<PlugMetaUsageData> = []
 
   if (!html) {
     console.error('Error: Invalid HTML input.')
@@ -54,7 +54,7 @@ export function parseCommunityAvgRolls(html: string): Array<RollData> {
 
         const itemShowHover = liElem.querySelector('.item.show-hover')
         if (itemShowHover) {
-          rollData[rollIndex].perkId = itemShowHover.getAttribute('data-id')
+          rollData[rollIndex].perkId = new Number(itemShowHover.getAttribute('data-id').trim()).valueOf()
           const imgEl = itemShowHover.querySelector('img')
           if (imgEl) {
             rollData[rollIndex].imgUrl = imgEl.src
@@ -70,36 +70,36 @@ export function parseCommunityAvgRolls(html: string): Array<RollData> {
   return rollData
 }
 
-export interface RollComboItem {
-  ids: string[]
+export interface MetaComboDescription {
+  ids: number[]
   imgs: string[]
   names: string[]
   percentText: string | undefined
 }
 
-export interface RollCombos {
-  combos: RollComboItem[]
-  masterwork?: RollComboItem[]
-  mods?: RollComboItem[]
+export interface MetaCombos {
+  combos: MetaComboDescription[]
+  masterwork?: MetaComboDescription[]
+  mods?: MetaComboDescription[]
 }
 
-export function parseCommunityRollCombos(html: string): RollCombos {
+export function parseCommunityRollCombos(html: string): MetaCombos {
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
 
-  const parseSection = (htmlSection: Element): RollComboItem[] => {
-    const data: RollComboItem[] = []
+  const parseSection = (htmlSection: Element): MetaComboDescription[] => {
+    const data: MetaComboDescription[] = []
 
     for (const groupElem of htmlSection.children) {
       const idsElems = groupElem.querySelectorAll('.item')
       const namesElems = groupElem.querySelectorAll('.perk-names')
       const percentElem = groupElem.querySelector('.combo-percent')?.textContent?.trim()
-      const ids: string[] = []
+      const ids: number[] = []
       const imgs: string[] = []
       const names: string[] = []
 
       idsElems.forEach(elem => {
-        ids.push(elem.getAttribute('data-id') || '')
+        ids.push(new Number(elem.getAttribute('data-id')).valueOf())
         const imgElem = elem.querySelector('img')
         imgs.push(imgElem?.getAttribute('src') || '')
       })
@@ -127,7 +127,7 @@ export function parseCommunityRollCombos(html: string): RollCombos {
   const modsHtml = doc.querySelector('#mod-stats')
   const mods = modsHtml ? parseSection(modsHtml) : null
 
-  const retCombos: RollCombos = {
+  const retCombos: MetaCombos = {
     combos,
     masterwork,
     mods: mods,

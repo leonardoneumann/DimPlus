@@ -7,7 +7,7 @@ import withErrorBoundary from '@src/shared/hoc/withErrorBoundary'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { MsgAddItemInfoToSidepanel, MsgNames } from '@root/src/shared/messaging/eventMessages'
-import SidePanelList from './components/SidePanelList'
+import WeaponList from './components/WeaponList'
 import { ConfigProvider, theme } from 'antd'
 
 const SidePanel: React.FC = () => {
@@ -41,7 +41,7 @@ const SidePanel: React.FC = () => {
         // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
       }}>
       <div className="App">
-        <SidePanelList items={items} />
+        <WeaponList items={items} />
       </div>
     </ConfigProvider>
   )

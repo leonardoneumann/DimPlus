@@ -1,4 +1,4 @@
-import { searchItemComponetByIID } from '@root/src/dim/storage/inventory'
+import { getProfileItemComponents, searchItemComponetByIID } from '@root/src/dim/storage/profile'
 import { findParentElementByClassName, findChildElementByClassName } from '@src/shared/utils/dom'
 import { sendItemClickToBackground, sendItemClickToSidepanel } from './eventMessagesSender'
 import { parseCommunityAvgRolls, parseCommunityRollCombos } from '../../../scrapers/lightgg'
@@ -33,6 +33,9 @@ export async function onItemClick(event: MouseEvent) {
     if (itemIID !== null && lastItemIID !== itemIID) {
       lastItemIID = itemIID
       const item = await searchItemComponetByIID(itemIID)
+      const itemcomp = await getProfileItemComponents()
+
+      console.log(itemcomp.instances.data?.[itemIID])
 
       if (item !== null) {
         console.log(`Item id is ${item.itemHash}`)
