@@ -35,10 +35,10 @@ const SidePanel: React.FC = () => {
     <ConfigProvider
       theme={{
         // 1. Use dark algorithm
-        algorithm: theme.darkAlgorithm,
+        //algorithm: theme.darkAlgorithm,
 
         // 2. Combine dark algorithm and compact algorithm
-        // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+        algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
       }}>
       <div className="App">
         <WeaponList items={items} />

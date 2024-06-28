@@ -1,31 +1,53 @@
 import React from 'react'
-import { Avatar, Badge, Col, Divider, Row, Tag, Tooltip } from 'antd'
+import { Avatar, Col, Divider, Row, Tag, Tooltip } from 'antd'
 import { PlugDisplayData } from '@root/src/shared/d2items/itemInfo'
 
 interface WeaponPlugMetaGridProps {
   plugs: PlugDisplayData[]
 }
 
-interface SidepanelPlugMetaGridItemProps {
+interface WeaponPlugMetaGridItemProps {
   plugData: PlugDisplayData
 }
 
-const WeaponPlugMetaItem: React.FC<SidepanelPlugMetaGridItemProps> = ({ plugData }) => {
+const WeaponPlugMetaItem: React.FC<WeaponPlugMetaGridItemProps> = ({ plugData }) => {
   const percentTagCSSProps: React.CSSProperties = {
     fontWeight: 700,
     textShadow: '1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000',
+    paddingBottom: '5px',
+  }
+
+  const pickPlaceColor = (place: number) => {
+    switch (place) {
+      case 1:
+      case 2:
+        return 'rgb(255 255 0 / 85%)'
+      case 3:
+        return 'rgb(100 255 0 / 65%)'
+      default:
+        return '#8080806b'
+    }
+  }
+
+  const placeDivCSSProps: React.CSSProperties = {
+    color: '#ffffffcf',
+    fontSize: '12px',
+    position: 'absolute',
+    top: '-10px',
+    paddingLeft: '2px',
+    paddingRight: '2px',
+    border: '1px solid',
+    borderRadius: '4px',
+    backgroundColor: pickPlaceColor(plugData.metaUsage.place),
   }
 
   return (
-    <Col span={6}>
-      <Badge size="small" count={plugData.metaUsage.place} color={plugData.metaUsage.color}>
-        <Tooltip title={plugData.name} trigger="hover">
-          <Avatar src={plugData.icon} size={40} shape="circle" />
-        </Tooltip>
-      </Badge>
-      <Tag style={percentTagCSSProps} color={plugData.metaUsage.color}>
-        {plugData.metaUsage.percent}
-      </Tag>
+    <Col span={6} style={percentTagCSSProps}>
+      <div style={placeDivCSSProps}>{'#' + (plugData.metaUsage.place ?? '??')}</div>
+      <Tooltip title={plugData.name} trigger="hover">
+        <Avatar src={plugData.icon} size={40} shape="circle" />
+      </Tooltip>
+      <Tag color={plugData.metaUsage.color}>{plugData.metaUsage.percent}</Tag>
     </Col>
   )
 }
