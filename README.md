@@ -1,3 +1,7 @@
+<a href="https://www.paypal.com/donate/?hosted_button_id=ATV6DBN4C4FK8">
+  <img src="readme_imgs/paypal-donate-button.png" alt="Donate with PayPal" />
+</a>
+
 <img src="public/icon-128.png" alt="logo"/>
 
 # DIM Plus Extension for Chrome (New version for Manifest V3)
