@@ -21,6 +21,8 @@ Additionally , to open the sidepanel you need to click on the extension icon, do
 
 ![Alt text](./readme_imgs/sidepanel%20look.png)
 
+![Alt text](./readme_imgs/sidepanel%20fullinfo.png)
+
 ### Building and Testing
 
 This extension is made with React 18 and Antd components, it also used the [Chrome Extension boilerplate by Jonghakseo](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite) as starting point. Refer to the README.Development.md document for more information.
