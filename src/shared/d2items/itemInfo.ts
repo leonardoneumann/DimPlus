@@ -15,25 +15,18 @@ export interface PlugDisplayData {
   position: [col: number, row: number]
 }
 
-export class ItemInfo {
+export interface ItemInfo {
   component: DestinyItemComponent
-  metaCombos: MetaCombos
+  metaCombos?: MetaCombos
 
   hash: number
   instanceId: string
 
   //manifest / insntace properties
-  displayName: string
-  icon: string
+  displayName?: string
+  icon?: string
   plugDisplayData: PlugDisplayData[]
-  level: number
-
-  constructor(component: DestinyItemComponent) {
-    this.component = component
-    this.hash = component.itemHash
-    this.instanceId = component.itemInstanceId
-    this.plugDisplayData = []
-  }
+  level?: number
 }
 
 export async function createItemInfo(
@@ -41,7 +34,12 @@ export async function createItemInfo(
   plugMetaUsageData?: PlugMetaUsageData[],
   metaCombos?: MetaCombos,
 ): Promise<ItemInfo> {
-  const info = new ItemInfo(component)
+  const info: ItemInfo = {
+    component: component,
+    hash: component.itemHash,
+    instanceId: component.itemInstanceId,
+    plugDisplayData: [],
+  }
 
   const manifest = await getD2Manifest()
   const itemDefinition = manifest.DestinyInventoryItemDefinition[info.hash]

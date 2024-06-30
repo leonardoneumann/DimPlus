@@ -93,7 +93,13 @@ export function parseCommunityRollCombos(html: string): MetaCombos {
     for (const groupElem of htmlSection.children) {
       const idsElems = groupElem.querySelectorAll('.item')
       const namesElems = groupElem.querySelectorAll('.perk-names')
-      const percentElem = groupElem.querySelector('.combo-percent')?.textContent?.trim()
+      const percentElem = groupElem.querySelector('.combo-percent')
+
+      let percentText = percentElem?.textContent
+      if (percentText) {
+        percentText = percentText.substring(0, percentText.indexOf('%') + 1).trim()
+      }
+
       const ids: number[] = []
       const imgs: string[] = []
       const names: string[] = []
@@ -105,14 +111,14 @@ export function parseCommunityRollCombos(html: string): MetaCombos {
       })
 
       namesElems.forEach(elem => {
-        names.push(elem.textContent?.replace('+', '').trim() || '')
+        names.push(elem.textContent?.trim() || '')
       })
 
       data.push({
         ids,
         imgs,
         names,
-        percentText: percentElem,
+        percentText: percentText,
       })
     }
 
