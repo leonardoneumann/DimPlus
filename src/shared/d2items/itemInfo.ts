@@ -73,12 +73,19 @@ export async function createItemInfo(
         metaUsage: metaUsage,
         position: [colIndex - 1, rowIndex],
       })
-
-      info.plugDisplayData[0].position[0]
     })
   }
 
   info.metaCombos = metaCombos
+
+  for (let comboIndex = 0; comboIndex < info.metaCombos.combos.length; comboIndex++) {
+    const foundFirst = info.plugDisplayData.find(c => c.hash === metaCombos.combos[comboIndex].ids[0])
+    const foundSecond = info.plugDisplayData.find(c => c.hash === metaCombos.combos[comboIndex].ids[1])
+
+    if (foundFirst && foundSecond) {
+      metaCombos.combos[comboIndex].haveCombo = true
+    }
+  }
 
   return info
 }

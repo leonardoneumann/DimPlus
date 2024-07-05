@@ -62,8 +62,6 @@ const PlugMetaGrid: React.FC<PlugMetaGridProps> = ({ plugs }) => {
     grid.push(rowItems)
   }
 
-  //const maxCol = Math.max(...plugs.map((item) => item.position[0]))
-
   return (
     <div className="plug-meta-grid-container">
       <Divider style={{ fontSize: 'smaller' }}>Random Rolls Popularity</Divider>

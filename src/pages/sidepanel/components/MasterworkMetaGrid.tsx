@@ -22,7 +22,6 @@ const MasterworkMetaGrid: React.FC<MasterworkMetaGridProps> = ({ metaCombos }) =
 }
 
 const MasterworkMetaItem: React.FC<MasterworkMetaGridItemProps> = ({ masterworkData }) => {
-  console.log(masterworkData.imgs)
   return (
     <Col span={6} style={percentTagCSSProps}>
       <Tooltip title={masterworkData.names} trigger="hover">

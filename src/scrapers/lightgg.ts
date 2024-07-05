@@ -75,6 +75,7 @@ export interface MetaComboDescription {
   imgs: string[]
   names: string[]
   percentText: string | undefined
+  haveCombo?: boolean
 }
 
 export interface MetaCombos {
